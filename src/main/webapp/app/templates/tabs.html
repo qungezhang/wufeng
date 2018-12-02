@@ -1,0 +1,31 @@
+<ion-tabs class="tabs-icon-top tabs-color-active-positive" ng-class="{'tabs-item-hide':hideTab}">
+    <!-- 首页Tab -->
+    <ion-tab title="首页" icon-off="ion-android-home" icon-on="ion-android-home" href="#/tab/index"
+             on-deselect="clearHistory()" ng-click="clearCache('tab.index')">
+        <ion-nav-view name="tab-index"></ion-nav-view>
+    </ion-tab>
+    <!-- 特价Tab -->
+    <ion-tab title="特价" icon-off=" ion-pricetag" icon-on=" ion-pricetag" href="#/tab/sale"
+             on-deselect="clearHistory()" ng-click="clearCache('tab.sale')">
+        <ion-nav-view name="tab-sale"></ion-nav-view>
+    </ion-tab>
+
+    <!-- 推荐Tab -->
+    <ion-tab title="任务" icon-off=" ion-android-checkbox" icon-on=" ion-android-checkbox" href="#/tab/task"
+             on-deselect="clearHistory()" ng-click="clearCache('tab.task')">
+        <ion-nav-view name="tab-task"></ion-nav-view>
+    </ion-tab>
+
+    <!-- 产品Tab -->
+    <ion-tab title="产品" href="#/tab/guide" icon-off="ion-cube" icon-on="ion-cube"
+             on-deselect="clearHistory()" ng-click="clearCache('tab.guide')">
+        <ion-nav-view name="tab-product"></ion-nav-view>
+    </ion-tab>
+
+
+    <!--个人中心Tab -->
+    <ion-tab title="我" icon-off=" ion-person" icon-on=" ion-person" href="#/tab/me"
+             on-deselect="clearHistory()" ng-click="clearCache('tab.me')">
+        <ion-nav-view name="tab-me"></ion-nav-view>
+    </ion-tab>
+</ion-tabs>

@@ -1,0 +1,26 @@
+<ion-view view-title="我的积分" id="integral-me">
+    <div id="addPage">
+        <!-- 头部 -->
+        <ion-header-bar align-title="center" class="kunmaColorBg calendar-Zindex">
+            <a class="buttons left"  ui-sref="tab.integral-withdraw">
+                <i class="icon ion-chevron-left"></i>
+            </a>
+            <h1 class="title">提现失败</h1>
+        </ion-header-bar>
+        <ion-content >
+            <div class="tackSuccess">
+                <i class="icon ion-android-alert tackSuccess-icon fail"></i>
+                <div class="f-size20 tackSuccess-title">
+                    提交失败
+                </div>
+
+                <div class="f-size14 c-color99 tackSuccess-subtit">
+                    您账号未符合提现规则，请仔细阅读提现内容
+                </div>
+                <a class="button kunmaColorBg submit btn-integral mt90" ui-sref="tab.integral-withdraw-rule">查看提现规则</a>
+                <a class="button button-stable submit btn-integral mt20" ui-sref="tab.me">返回首页</a>
+            </div>
+        </ion-content>
+    </div>
+</ion-view>
+

@@ -1,0 +1,86 @@
+<ion-view view-title="首页" id="index" hide-tab="false">
+    <div id="integral_index">
+                <div id="addPage" class="integral-index-Bg">
+                    <!-- 头部 -->
+                    <ion-header-bar align-title="center">
+                        <a class="integral-index-img" ui-sref="tab.req-vip">
+                            <img src="img/images/iconfont-touxiang.png" alt="">
+                            <br>经纪人
+                        </a>
+                        <div class="header-search">
+                            <input class="input-search" type="text" name="" value="" placeholder="请输入内容">
+                            <img class="ion-search" src="img/images/iconfont-sousuo.png" alt="">
+                        </div>
+                        <a class="integral-index-img" href="#/tab/task">
+                            <img src="img/images/Group.png" alt="">
+                            <br>任务
+                        </a>
+                    </ion-header-bar>
+                    <!-- 正文 -->
+                    <ion-content >
+                        <div class="paopao">
+                            <div class="battery">
+                                <div class="battery-num">
+                                    {{userAgent.point}}
+                                </div>
+                                <div class="">
+                                    我的积分
+                                </div>
+                                <span class="logotext">KUNMA</span>
+                            </div>
+                            <div id="paopaoBox" >
+                                <div class="paopao-item {{item.brandEnergyStatus==1?'gray':''}}" ng-repeat="item in pointBalloonList" ng-class='paoIndex[$index] '
+                                ng-click="paopaoClick($index,item)">
+                                    <img ng-src="{{imgUrl}}{{item.icon}}" alt="">
+                                    <span class="paopao-time" ng-if="item.energyStatus==0&&item.brandEnergyStatus!=1">
+                                        {{paopaotime[$index]}}
+                                    </span>
+                                    <span class="paopao-time paopao-integral" ng-if="item.energyStatus==1 &&item.brandEnergyStatus!=1">
+                                        {{item.point}}分
+                                    </span>
+                                    <span class="paopao-time shengcheng" ng-if="item.brandEnergyStatus==1">
+                                        生成中
+                                    </span>
+                                    <span>
+                                        {{item.name}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div  class="integral-rankings">
+                            <div class="integral-rankings-header" >
+                                积分排行榜
+                            </div>
+                            <ul class="rankings-list">
+                                <!-- 大标题 -->
+                                <li class="rankings-item list-title">
+                                    <span class="sequence f-left">
+                                        名次
+                                    </span>
+                                    <span class="user-id">
+                                        用户名
+                                    </span>
+                                    <span class="integral-num f-right">
+                                        积分
+                                    </span>
+                                </li>
+                                <li class="rankings-item" ng-repeat="item in userAgentList|orderBy:item.sn">
+                                    <span class="sequence f-left">
+                                        <div class="ico-crown"></div>
+                                        <span>{{$index + 1}}</span>
+                                    </span>
+                                    <span class="user-id">
+                                        {{item.username}}
+                                    </span>
+                                    <span class="integral-num f-right">
+                                        {{item.point}}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </ion-content>
+
+                </div>
+
+            </div>
+</ion-view>

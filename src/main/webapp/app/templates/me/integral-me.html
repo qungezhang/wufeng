@@ -1,0 +1,50 @@
+<ion-view view-title="我的积分" id="integral-me">
+    <div id="addPage">
+            <!-- 头部 -->
+            <ion-header-bar align-title="center" class="kunmaColorBg">
+                <a class="buttons left" ui-sref="tab.me">
+                    <i class="icon ion-chevron-left"></i>
+                </a>
+                <h1 class="title">我的积分</h1>
+                <a ui-sref="tab.integral-withdraw" class="buttons right">积分提现</a>
+            </ion-header-bar>
+            <!-- 正文 -->
+            <ion-content class="whiteBG">
+                <div class="my-integral-title kunmaColorBg">
+                    <h1 class="title">
+                    当前<span class="title-num">{{pointList.userAgent.point}}</span>分
+                    </h1>
+                    <a class="my-integral-details" ui-sref="tab.integral-rule">
+                        <img class="problem" src="img/images/problem.png" alt="">
+                        <span>积分规则</span>
+                    </a>
+                </div>
+                <ul class="list" ng-if="pointList.pointLog.length>0">
+                    <li class="item item-divider integral-details-header">
+                        积分明细
+                    </li>
+                    <li class="item integral-details-item " ng-repeat="item in pointList.pointLog">
+                        <span class="time">
+                           {{item.createdate|date:'yyyy-MM-dd HH:mm'}}
+                        </span>
+                        <span class="title">
+                            {{item.msg}}
+                        </span>
+                        <span class=" f-right green">
+                           {{item.point}}
+                        </span>
+                    </li>
+                </ul>
+                <ul class="list" ng-if="pointList.pointLog.length == 0">
+                    <li class="item item-divider integral-details-header">
+                        积分明细
+                    </li>
+                    <li class="item integral-details-item ">
+                        暂无积分
+                    </li>
+
+                </ul>
+            </ion-content>
+
+</div>
+</ion-view>

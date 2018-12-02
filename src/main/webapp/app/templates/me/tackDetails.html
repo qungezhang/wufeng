@@ -1,0 +1,61 @@
+<ion-view view-title="任务详情" id="tackDetails" hide-tab="true">
+        <div id="addPage">
+            <!-- 头部 -->
+        <ion-header-bar align-title="center" class="kunmaColorBg calendar-Zindex">
+            <a class="buttons left" ui-sref="tab.MyTaskList">
+                <i class="icon ion-chevron-left"></i>
+            </a>
+            <h1 class="title">任务详情</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="tackDetails-header item">
+                <div class="tackDetails-title f-size20 c-color33">
+                    {{TaskDetail.name}}
+                </div>
+                <div class="tackDetails-header-text f-size14">
+                    <span class="c-color66">
+                        {{TaskDetail.address}}
+                    </span>
+                    <span class="tackDetails-time">
+                        {{TaskDetail.endTime|date:'yyyy-MM-dd'}}
+                    </span>
+                </div>
+                <div class="task-details-number">
+                    任务编号：{{TaskDetail.jid}}
+                </div>
+                <div class="task-details-money">
+                    ¥ {{TaskDetail.price}}
+                </div>
+            </div>
+            <div class="tackDetails-content f-size14 c-color33">
+                <div class="tackDetails-content-title c-color99 f-size14">
+                    任务介绍
+                </div>
+                <div class="tackDetails-content-content">
+                    {{TaskDetail.description}}
+                </div>
+                <div ng-show='{{TaskDetail.status==2||TaskDetail.status==3}}' style="padding-top:20px;">
+                    <div class="tackDetails-content-title c-color99 f-size14">
+                        雇主信息
+                    </div>
+                    <div class="tackDetails-content-content">
+                        1、雇主姓名：{{TaskDetail.employerName}} <br>
+                        2、联系方式：{{TaskDetail.employerMobile}} <br>
+                        3、详细地址：{{TaskDetail.address}}
+                    </div>
+                </div>
+
+            </div>
+
+        </ion-content>
+        <div class="bar bar-footer kunmaColorBg">
+            <div class="title">{{TaskDetail.status==0?'待领取':''}}
+            {{TaskDetail.status==1?'待审核':''}}
+            {{TaskDetail.status==2?'审核通过':''}}
+            {{TaskDetail.status==3?'任务完成':''}}
+            {{TaskDetail.status==4?'审核未通过':''}}
+            {{TaskDetail.status==5?'任务关闭':''}}</div>
+        </div>
+        </div>
+
+</ion-view>

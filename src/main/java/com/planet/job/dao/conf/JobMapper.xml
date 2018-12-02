@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.planet.job.dao.JobMapper" >
+    <resultMap id="BaseResultMap" type="com.planet.job.domain.Job" >
+        <id column="jid" property="jid" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="subhead" property="subhead" jdbcType="VARCHAR" />
+        <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="employerName" property="employerName" jdbcType="VARCHAR" />
+        <result column="employerMobile" property="employerMobile" jdbcType="VARCHAR" />
+        <result column="tags" property="tags" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        jid,name,subhead,startTime,endTime,address,employerName,employerMobile,tags,description,price,status,createTime,modifyTime
+    </sql>
+
+    <select id="listPageSelectJob" resultMap="BaseResultMap" parameterType="com.planet.job.domain.Job">
+        select j.*,uj.uid as receiveId,uj.username as receiveName,uj.mobile as receiveMobile,uj.cardNo as receiveCardNo,uj.createTime as receiveTime,uj.examineRemark,uj.id as examineId,uj.examineStatus,uj.status as userJobStatus
+        from sys_job j
+        left join sys_user_job uj on uj.jobId = j.jid
+        where  1=1
+        <if test="jid != null and jid != ''">
+            and j.jid = #{jid,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != ''" >
+            and j.name LIKE CONCAT(CONCAT('%',#{name,jdbcType=VARCHAR}),'%')
+        </if>
+        and (j.status = 0 or j.status = 1 or j.status = 2 )
+        order by j.createTime Desc
+    </select>
+
+    <select id="listPageSelectJobAll" resultMap="BaseResultMap" parameterType="com.planet.job.domain.Job">
+        select j.*,uj.uid as receiveId,uj.username as receiveName,uj.mobile as receiveMobile,uj.cardNo as receiveCardNo,uj.createTime as receiveTime,uj.examineRemark,uj.id as examineId,uj.examineStatus,uj.status as userJobStatus
+        from sys_job j
+        left join sys_user_job uj on uj.jobId = j.jid and uj.`status` = 0  and examineStatus != 2
+        where  1=1
+        <if test="jid != null and jid != ''">
+            and j.jid = #{jid,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != ''" >
+            and j.name LIKE CONCAT(CONCAT('%',#{name,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="status != null">
+            and j.status = #{status,jdbcType=INTEGER}
+        </if>
+        order by j.createTime Desc
+    </select>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select  <include refid="Base_Column_List"/>
+        from sys_job
+        where  jid = #{id,jdbcType=INTEGER}
+
+    </select>
+
+    <insert id="insertByPrimaryKeySelective" parameterType="com.planet.job.domain.Job" >
+        insert into sys_job
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="jid != null" >
+                jid,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="subhead != null" >
+                subhead,
+            </if>
+            <if test="startTime != null" >
+                startTime,
+            </if>
+            <if test="endTime != null" >
+                endTime,
+            </if>
+            <if test="address != null" >
+                address,
+            </if>
+            <if test="employerName != null" >
+                employerName,
+            </if>
+            <if test="employerMobile != null" >
+                employerMobile,
+            </if>
+            <if test="tags != null" >
+                tags,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="price != null" >
+                price,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="modifyTime != null" >
+                modifyTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="jid != null" >
+                #{jid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="subhead != null" >
+                #{subhead,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="address != null" >
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="employerName != null" >
+                #{employerName,jdbcType=VARCHAR},
+            </if>
+            <if test="employerMobile != null" >
+                #{employerMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null" >
+                #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null" >
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.planet.job.domain.Job" >
+        update sys_job
+        <set >
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="subhead != null" >
+                subhead = #{subhead,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                startTime = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                endTime = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="address != null" >
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="employerName != null" >
+                employerName = #{employerName,jdbcType=VARCHAR},
+            </if>
+            <if test="employerMobile != null" >
+                employerMobile = #{employerMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null" >
+                tags = #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null" >
+                modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where jid = #{jid,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from sys_job
+        where jid = #{jid,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="listPageSelectUserJob" resultMap="BaseResultMap" parameterType="com.planet.job.domain.Job">
+        select j.*,uj.uid as receiveId,uj.username as receiveName,uj.mobile as receiveMobile,uj.cardNo as receiveCardNo,uj.createTime as receiveTime,uj.examineRemark,uj.id as examineId,uj.examineStatus,uj.status as userJobStatus
+        from sys_job j
+        left join sys_user_job uj on uj.jobId = j.jid and uj.`status` = 0
+        where  uj.uid = #{uid,jdbcType=INTEGER}
+        order by j.createTime Desc
+    </select>
+
+    <select id="selectIn30MinuteJobList" resultMap="BaseResultMap">
+        select * from sys_job where endTime is not null and DATE(endTime) &lt; DATE_ADD(NOW(), INTERVAL -30 MINUTE) and `status` = 0
+    </select>
+
+
+</mapper>

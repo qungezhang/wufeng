@@ -1,0 +1,69 @@
+    <div id="taskListMy">
+        <div id="addPage">
+            <!-- 头部 -->
+        <ion-header-bar align-title="center" class="kunmaColorBg calendar-Zindex">
+            <a class="buttons left" ui-sref="tab.me">
+                    <i class="icon ion-chevron-left"></i>
+                </a>
+            <h1 class="title">我的任务</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ul class="container task list" ng-if="taskList">
+                <li class="item task-item" ng-repeat="item in taskList|orderBy:item.sn">
+                    <div ng-click="toMyTaskDetail(item)">
+                        <div class="approval-results" >
+                            {{item.status==0?'待领取':''}}
+                            {{item.status==1?'待审核':''}}
+                            {{item.status==2?'审核通过':''}}
+                            {{item.status==3?'任务完成':''}}
+                            {{item.status==4?'审核未通过':''}}
+                            {{item.status==5?'任务关闭':''}}
+                        </div>
+                        <div class="task-img">
+                            <img src="img/images/task.png" alt="">
+                        </div>
+                        <div class="task-content">
+                            <div class="taskMy-content-title">
+                                <span class="f-size16 c-color33">{{item.name}}</span>
+                            </div>
+                            <div class="taskMy-content-money">
+                                <span class="f-size16 red">¥ {{item.price}}</span>
+                            </div>
+                            <div class="f-size14 c-color66">
+                                <span>{{item.address}}</span>
+                                <span>
+                                    任务编号：{{item.jid}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="more-btn" ng-hide="!{{item.status<=2}}">
+                        <a class="c-color33 f-size12">更多</a>
+                        <a class="give-up-btn kunmaColor f-size14" ng-click="btnGiveUpTask(item)">
+                            放弃任务
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <ion-infinite-scroll immediate-check="false" ng-if="isLoadMore" distance="5%" on-infinite="loadMore()"></ion-infinite-scroll>
+            <div class="no-data" ng-if="!moreDataCanBeLoaded">没有更多产品了！</div>
+        </ion-content>
+        </div>
+        <!-- 放弃任务 -->
+        <div id='popup' ng-if="!showPopup">
+            <div class="popup-content">
+                <div class="tack-popup-text punishment">
+                    是否确定放弃任务，放弃任务之后您将三天之内无法接受新任务
+                </div>
+                <div class="popup-btns">
+                    <div class="popup-btn kunmaColor " ng-click="btnGiveUpTask()">
+                        取消
+                    </div>
+                    <div class="popup-btn c-color99 " ng-click="giveUpTask()">
+                        确认
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

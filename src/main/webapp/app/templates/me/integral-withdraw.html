@@ -1,0 +1,83 @@
+<ion-view view-title="积分提现" id="integral-withdraw">
+        <div id="addPage">
+            <!-- 头部 -->
+            <ion-header-bar align-title="center" class="kunmaColorBg">
+                <a class="buttons left" ui-sref="tab.integral-me">
+                    <i class="icon ion-chevron-left"></i>
+                </a>
+                <h1 class="title">提现</h1>
+                <a class="buttons right" ui-sref="tab.integral-record">明细</a>
+            </ion-header-bar>
+            <!-- 正文 -->
+            <form name="withdrawForm" novalidate>
+                <ion-content>
+                    <div class="list">
+                        <label class="item item-input">
+                            <span class="input-label">可提现积分</span>
+                            <div class="red">
+                                {{point}}
+                            </div>
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">本次提现</span>
+
+                            <input type="number"  ng-model="user.point" required name="point" placeholder="请输入提现积分">
+                        </label>
+                        <a class="rule" ui-sref="tab.integral-withdraw-rule">
+                            <img src="img/images/rule.png" alt="">
+                            <div>提现规则</div>
+                        </a>
+                    </div>
+                    <div class="input-title">
+                        提现账户
+                    </div>
+                    <ul class="list">
+
+                       <div class="icon ion-chevron-right payMore"  ng-class="{'payMore_hover':onShow}" ng-click="toggleMenu()" >
+                        </div>
+                        <div  ng-switch="payWay">
+                            <label class="item item-input withdrawInput" ng-switch-when="1" >
+                                <span class="input-label">支付宝</span>
+                                <input  type="text" ng-model="user.username" required name="username" placeholder="请输入支付宝账号">
+                            </label>
+                            <label class="item item-input withdrawInput" ng-switch-default >
+                                <span class="input-label">微信</span>
+                                <input  type="text" ng-model="user.username" required name="username" placeholder="请输入微信账号">
+                            </label>
+                        </div>
+                        <!-- 显示支付选项 -->
+                        <div ng-show="onShow">
+                            <label class="item item-radio" >
+                                <input class="radioInput"  type="radio" ng-click="showPayWay()" ng-model="user.payWay" value="1">
+                                <div class="radio-content">
+                                    <div class="item-content">
+                                        <img src="img/images/zhifubao.png" alt="">
+                                        支付宝
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="item item-radio">
+                                <input class="radioInput" type="radio" ng-model="user.payWay"  ng-click="showPayWay()"  value="2" ng-checked="true" required>
+                                <div class="radio-content">
+                                    <div class="item-content">
+                                        <img src="img/images/weixin.png" alt="">
+                                        微信
+                                    </div>
+                                </div>
+                            </label>
+
+                        </div>
+                        <label class="item item-input">
+                            <span class="input-label">手机验证码</span>
+                            <input class="input-right-padding" type="number" maxlength="6" required ng-model="user.code"  placeholder="请输入验证码">
+                        </label>
+                        <div class="verificationBox">
+                            <button class="verificationBtn" style="min-width: 100px" id="verificationBtn"  ng-class="{'countDown':timer>0}" ng-disabled="withdrawForm.username.$invalid&&timer>0" ng-click="sendValidateNum()">{{transmit}}</button>
+                        </div>
+                    </ul>
+                    <button class="button kunmaColorBg submit" ng-disabled="withdrawForm.$invalid" ng-click="withdraw()">立即提现</button>
+                </ion-content>
+            </form>
+
+        </div>
+</ion-view>

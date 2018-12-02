@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.planet.point.dao.WithdrawMapper">
+    <resultMap id="BaseResultMap" type="com.planet.point.domain.Withdraw">
+        <id column="wid" property="wid" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="exchangePoint" property="exchangePoint" jdbcType="DOUBLE"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="transferTime" property="transferTime" jdbcType="TIMESTAMP"/>
+        <result column="withdrawConsumeType" property="withdrawConsumeType" jdbcType="INTEGER"/>
+        <result column="withdrawBeforeAmount" property="withdrawBeforeAmount" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        wid, uid, username, type, account, amount, exchangePoint, createTime, status, remark, transferTime,withdrawConsumeType,withdrawBeforeAmount
+    </sql>
+
+    <select id="listPageSelectWithdraw" resultMap="BaseResultMap" parameterType="com.planet.point.domain.Withdraw">
+        select w.*,u.Point as point
+        from sys_withdraw w
+        left join sys_user u on u.UID = w.uid
+        where  1=1
+        <if test="wid != null and wid != ''">
+            and w.wid = #{wid,jdbcType=VARCHAR}
+        </if>
+        <if test="account != null and account != ''">
+            and w.account like CONCAT(CONCAT('%',#{account,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="type != null and type != ''">
+            and w.type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="status != null and status != ''">
+            and w.status = #{status,jdbcType=INTEGER}
+        </if>
+        <if test="username != null and username != ''">
+            and w.username like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="uid != null and uid != ''">
+            and w.uid = #{uid,jdbcType=INTEGER}
+        </if>
+        <if test="date != null">
+            and  date_format(w.createTime,'%Y-%m') = #{date,jdbcType=TIMESTAMP}
+        </if>
+        order by w.createTime Desc
+    </select>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select  <include refid="Base_Column_List"/>
+        from sys_withdraw
+        where  wid = #{wid,jdbcType=VARCHAR}
+
+    </select>
+
+    <insert id="insertByPrimaryKeySelective" parameterType="com.planet.point.domain.Withdraw" >
+        insert into sys_withdraw
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="wid != null" >
+                wid,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="username != null" >
+                username,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="account != null" >
+                account,
+            </if>
+            <if test="amount != null" >
+                amount,
+            </if>
+            <if test="exchangePoint != null" >
+                exchangePoint,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="transferTime != null" >
+                transferTime,
+            </if>
+            <if test="withdrawConsumeType != null" >
+                withdrawConsumeType,
+            </if>
+            <if test="withdrawBeforeAmount != null" >
+                withdrawBeforeAmount,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="wid != null" >
+                #{wid,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangePoint != null" >
+                #{exchangePoint,jdbcType=DOUBLE},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="transferTime != null" >
+                #{transferTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="withdrawConsumeType != null" >
+                #{withdrawConsumeType,jdbcType=INTEGER},
+            </if>
+            <if test="withdrawBeforeAmount != null" >
+                #{withdrawBeforeAmount,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.planet.point.domain.Withdraw" >
+        update sys_withdraw
+        <set >
+            <if test="username != null" >
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="account != null" >
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangePoint != null" >
+                exchangePoint = #{exchangePoint,jdbcType=DOUBLE},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="transferTime != null" >
+                transferTime = #{transferTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="withdrawConsumeType != null" >
+                withdrawConsumeType = #{withdrawConsumeType,jdbcType=INTEGER},
+            </if>
+            <if test="withdrawBeforeAmount != null" >
+                withdrawBeforeAmount = #{withdrawBeforeAmount,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where wid = #{wid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

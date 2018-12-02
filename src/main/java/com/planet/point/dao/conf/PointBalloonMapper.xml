@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.planet.point.dao.PointBalloonMapper">
+    <resultMap id="BaseResultMap" type="com.planet.point.domain.PointBalloon">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="endTime" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="oid" property="oid" jdbcType="VARCHAR"/>
+        <result column="getWay" property="getWay" jdbcType="INTEGER"/>
+        <result column="point" property="point" jdbcType="DOUBLE"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="energyStatus" property="energyStatus" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id, type, createTime, endTime, name, icon, oid, getWay, point, remark, uid, status, energyStatus
+  </sql>
+
+    <select id="getListAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from sys_point_balloon where 1=1
+        <if test="type != null" >
+            and type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="getWay != null" >
+            and getWay = #{getWay,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="getListCreateTimeNotNull" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from sys_point_balloon where 1=1
+        <if test="type != null" >
+            and type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="getWay != null" >
+            and getWay = #{getWay,jdbcType=INTEGER}
+        </if>
+        and createTime is not null
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_point_balloon
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getBalloonNum" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) from sys_point_balloon where type = 1 and getWay = #{type,jdbcType=INTEGER} and energyStatus = 1
+    </select>
+
+    <select id="randPointBalloon" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+       select
+       <include refid="Base_Column_List"/>
+       from sys_point_balloon
+       where getWay = #{type,jdbcType=INTEGER} and createTime is null
+       order by rand() limit 1
+    </select>
+    <insert id="insertByPrimaryKeySelective" parameterType="com.planet.point.domain.PointBalloon" >
+        insert into sys_point_balloon
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="endTime != null" >
+                endTime,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="icon != null" >
+                icon,
+            </if>
+            <if test="oid != null" >
+                oid,
+            </if>
+            <if test="getWay != null" >
+                getWay,
+            </if>
+            <if test="point != null" >
+                point,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="energyStatus != null" >
+                energyStatus,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null" >
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="oid != null" >
+                #{oid,jdbcType=VARCHAR},
+            </if>
+            <if test="getWay != null" >
+                #{getWay,jdbcType=INTEGER},
+            </if>
+            <if test="point != null" >
+                #{point,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="energyStatus != null" >
+                #{energyStatus,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.planet.point.domain.PointBalloon" >
+        update sys_point_balloon
+        <set >
+            <if test="type != null" >
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                endTime = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null" >
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="oid != null" >
+                oid = #{oid,jdbcType=VARCHAR},
+            </if>
+            <if test="getWay != null" >
+                getWay = #{getWay,jdbcType=INTEGER},
+            </if>
+            <if test="point != null" >
+                point = #{point,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                uid = #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="energyStatus != null" >
+                energyStatus = #{energyStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateEnergyStatus" parameterType="java.lang.Integer">
+        update sys_point_balloon set energyStatus = 0
+        where getWay = #{type,jdbcType=INTEGER}
+    </update>
+
+    <select id="getPointBalloonList" resultMap="BaseResultMap">
+        select p.*,l.`Status` as brandEnergyStatus
+        from sys_point_balloon p
+        left join sys_point_log l on l.pbid = p.id and date(l.CreateDate) = curdate() and l.Uid = #{uid,jdbcType=INTEGER}
+        where (p.type = 1 and p.getWay = 6) or (p.type = 2 and p.`status` = 0 and p.energyStatus = 1)
+          and p.uid = #{uid,jdbcType=INTEGER} and l.id is null
+          order by p.getWay,p.energyStatus desc,l.`Status`,p.createTime limit 10
+    </select>
+
+    <select id="randGetUrlByPointBalloon" resultMap="BaseResultMap" >
+        select  <include refid="Base_Column_List"/> from sys_point_balloon
+        where 1=1
+        <if test="getWay != null" >
+            and getWay = #{getWay,jdbcType=INTEGER}
+        </if>
+        order by rand() limit 1
+    </select>
+
+    <select id="findByCurr" resultType="java.lang.Integer">
+      select count(*) from sys_point_balloon where type = 2 and uid = #{uid,jdbcType=INTEGER} and TO_DAYS(endTime) = TO_DAYS(now()) and getWay = #{getWay,jdbcType=INTEGER}
+    </select>
+</mapper>

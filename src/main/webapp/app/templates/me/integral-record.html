@@ -1,0 +1,72 @@
+<ion-view view-title="积分明细" id="integral-record">
+        <div id="addPage">
+            <!-- 头部 -->
+            <ion-header-bar align-title="center" class="kunmaColorBg calendar-Zindex">
+                <a class="buttons left" ui-sref="tab.integral-withdraw">
+                    <i class="icon ion-chevron-left"></i>
+                </a>
+                <h1 class="title">提现记录</h1>
+            </ion-header-bar>
+            <!-- 正文 -->
+            <ion-content class="whiteBG">
+                <!--<li>{{now|date: 'yyyy-MM-dd hh:mm:ss'}}</li>-->
+
+                <ul class="list" ng-if="recordData.length>0">
+                    <li class="item item-divider integral-details-header calendar-Zindex">
+                        <span>{{theMonth}}</span>
+                        <span class="t-right calendar" ng-click="calendarShow()">
+                            <img  src="img/images/calendar.png" alt="">
+                        </span>
+                    </li>
+                    <li class="item integral-details-item  record-item" ng-repeat="item in recordData">
+                        <div class="time f-left f-size12">
+                            <div >{{item.transferTime|date:'yyyy/MM/dd'}}</div>
+                            <div >{{item.transferTime|date:'HH:mm'}}</div>
+                        </div>
+                        <div class="title f-left" ng-if="item.type == 1">
+                            转账至支付宝账户
+                        </div>
+                        <div class="title f-left" ng-if="item.type == 2">
+                            转账至微信账户
+                        </div>
+                        <div class="num f-right">
+                            {{item.exchangePoint}}<span class="f-size12">积分</span>
+                            <div class="f-size12 t-right red" ng-if="item.status == 0">审核中</div>
+                            <div class="f-size12 t-right" ng-if="item.status == 1">已打款</div>
+                            <div class="f-size12 t-right red" ng-if="item.status == 2">打款失败</div>
+                        </div>
+                    </li>
+
+                </ul>
+                <ul class="list" ng-if="recordData.length == 0 || recordData == null">
+                    <li class="item item-divider integral-details-header calendar-Zindex">
+                        <span>{{theMonth}}</span>
+                        <span class="t-right calendar" ng-click="calendarShow()">
+                            <img  src="img/images/calendar.png" alt="">
+                        </span>
+                    </li>
+                    <li class="item integral-details-item  record-item">
+                        <div class="title f-left" >
+                            暂无提现记录
+                        </div>
+                    </li>
+                </ul>
+            </ion-content>
+        </div>
+        <div id='popup' >
+            <div class="calendar-content list">
+                <div class="item item-divider integral-details-header calendar-Zindex" ng-click="getPointRecord()">
+                    本月
+                </div>
+                 <span class="t-right calendar" ng-click="calendarHide()" style="z-index:10000;">
+                    <img  src="img/images/calendar.png" alt="">
+                </span>
+                <ul style="height: 120px;overflow-y: scroll">
+                    <li class="calendar-item" ng-repeat="item in monthData" ng-click="showMonthData(item)" data-id="{{item}}">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+</ion-view>

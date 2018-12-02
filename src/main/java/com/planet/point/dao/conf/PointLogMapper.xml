@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.planet.point.dao.PointLogMapper">
+    <resultMap id="BaseResultMap" type="com.planet.point.domain.PointLog">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="AfterPoint" property="afterpoint" jdbcType="DOUBLE"/>
+        <result column="Uid" property="uid" jdbcType="INTEGER"/>
+        <result column="Type" property="type" jdbcType="INTEGER"/>
+        <result column="Point" property="point" jdbcType="DOUBLE"/>
+        <result column="MSG" property="msg" jdbcType="VARCHAR"/>
+        <result column="CreateDate" property="createdate" jdbcType="TIMESTAMP"/>
+        <result column="Tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="Status" property="status" jdbcType="INTEGER"/>
+        <result column="AdminName" property="adminname" jdbcType="VARCHAR"/>
+        <result column="getWay" property="getWay" jdbcType="INTEGER"/>
+        <result column="pbid" property="pbid" jdbcType="INTEGER"/>
+        <result column="wid" property="wid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, AfterPoint, Uid, Type, Point, MSG, CreateDate, Tel, Status, getWay, pbid,wid
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_point_log
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_point_log
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.planet.point.domain.PointLog">
+        insert into sys_point_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="afterpoint != null">
+                AfterPoint,
+            </if>
+            <if test="uid != null">
+                Uid,
+            </if>
+            <if test="type != null">
+                Type,
+            </if>
+            <if test="point != null">
+                Point,
+            </if>
+            <if test="msg != null">
+                MSG,
+            </if>
+            <if test="createdate != null">
+                CreateDate,
+            </if>
+            <if test="tel != null">
+                Tel,
+            </if>
+            <if test="status != null">
+                Status,
+            </if>
+            <if test="adminname != null">
+                AdminName,
+            </if>
+            <if test="getWay != null">
+                getWay,
+            </if>
+            <if test="pbid != null">
+                pbid,
+            </if>
+            <if test="wid != null">
+                wid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="afterpoint != null">
+                #{afterpoint,jdbcType=DOUBLE},
+            </if>
+            <if test="uid != null">
+                #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                #{point,jdbcType=INTEGER},
+            </if>
+            <if test="msg != null">
+                #{msg,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null">
+                #{createdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tel != null">
+                #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="adminname != null">
+                #{adminname,jdbcType=INTEGER},
+            </if>
+            <if test="getWay != null">
+                #{getWay,jdbcType=INTEGER},
+            </if>
+            <if test="pbid != null">
+                #{pbid,jdbcType=INTEGER},
+            </if>
+            <if test="wid != null">
+                #{wid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.planet.point.domain.PointLog">
+        update sys_point_log
+        <set>
+            <if test="afterpoint != null">
+                AfterPoint = #{afterpoint,jdbcType=DOUBLE},
+            </if>
+            <if test="uid != null">
+                Uid = #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                Type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                Point = #{point,jdbcType=DOUBLE},
+            </if>
+            <if test="msg != null">
+                MSG = #{msg,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null">
+                CreateDate = #{createdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tel != null">
+                Tel = #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                Status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="getWay != null">
+                getWay = #{getWay,jdbcType=INTEGER},
+            </if>
+            <if test="pbid != null">
+                pbid = #{pbid,jdbcType=INTEGER},
+            </if>
+            <if test="wid != null">
+                wid = #{wid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.planet.point.domain.PointLog">
+    update sys_point_log
+    set AfterPoint = #{afterpoint,jdbcType=DOUBLE},
+      Uid = #{uid,jdbcType=INTEGER},
+      Type = #{type,jdbcType=INTEGER},
+      Point = #{point,jdbcType=DOUBLE},
+      MSG = #{msg,jdbcType=VARCHAR},
+      CreateDate = #{createdate,jdbcType=TIMESTAMP},
+      Tel = #{tel,jdbcType=VARCHAR},
+      Status = #{status,jdbcType=INTEGER}
+      getWay = #{getWay,jdbcType=INTEGER}
+      pbid = #{pbid,jdbcType=INTEGER}
+      wid = #{wid,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <select id="listPagePointLog" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select * from sys_point_log spl where 1 = 1
+        <if test="tel != null">
+            and spl.Tel = #{tel,jdbcType=VARCHAR}
+        </if>
+        <if test="uid != null">
+            and spl.Uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ID DESC
+    </select>
+
+    <select id="getPointLogByUID" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_point_log
+        where Uid = #{uid,jdbcType=INTEGER}
+        ORDER BY CreateDate DESC
+    </select>
+
+</mapper>

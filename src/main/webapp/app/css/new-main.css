@@ -1,0 +1,228 @@
+#addPage a{
+    text-decoration: none;
+}
+.no-data{
+    padding: 15px 0;
+    text-align: center;
+    color: #666;
+}
+.tab-item .icon {
+    display: block;
+    margin: 7px auto 0;
+    height: auto;
+    font-size: 22px;
+}
+ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-color-active-positive .tab-item.tab-item-active{
+    color: #345B9A;
+}
+a{
+    color: inherit;
+}
+.f-left{
+    display: block;
+    float: left;
+}
+.f-right{
+    display: block;
+    float: right;
+}
+.t-right{
+    text-align: right;
+}
+
+.f-size12{
+    font-size: 12px;
+}
+.f-size14{
+    font-size: 14px;
+}
+.f-size16{
+    font-size: 16px;
+}
+.f-size18{
+    font-size: 18px;
+}
+.f-size20{
+    font-size: 20px;
+}
+.c-color33{
+    color: #333;
+}
+.c-color66{
+    color: #666
+}
+.c-color99{
+    color: #999
+}
+.green{
+    color: #1AAD19;
+}
+.red{
+    color: #D0021B;
+}
+/* 验证码按钮 */
+.verificationBtn{
+    position: absolute;
+    text-align: center;
+    min-width: 90px;
+    right: 15px;
+    background-color: #1AAD19;
+    font-size: 14px;
+    height: 37px;
+    padding: 0 10px;
+    color: #fff;
+    line-height: 37px;
+    border: 0;
+    border-radius: 5px;
+}
+.countDown{
+    position: absolute;
+    text-align: center;
+    min-width: 90px;
+    right: 15px;
+    background-color: #999;
+    font-size: 14px;
+    height: 37px;
+    padding: 0 10px;
+    line-height: 0;
+    color: #fff;
+    line-height: 37px;
+    border-radius: 5px;
+}
+/* 提交按钮 */
+button.submit{
+    display: block;
+    width: 90%;
+    margin: 35px auto 15px;
+}
+/* 按钮文字提示 */
+.btn-text{
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    padding: 0 5%;
+}
+/* 灰色背景色 */
+body{
+    background-color: rgba(250,250,250);
+    overflow: hidden;
+}
+ion-content.whiteBG{
+    background-color: #fff;
+}
+
+/* 页头固定样式 */
+#addPage ion-header-bar{
+    background-image: none!important;
+    height: 44px;
+    padding: 0 15px!important;
+    line-height: 44px;
+    background: none;
+}
+#addPage .buttons{
+    line-height: 44px;
+    height: 44px;
+    top: 0;
+    font-size: 16px;
+}
+#addPage .buttons.right{
+    line-height: 44px;
+    height: 44px;
+    top: 0;
+    right: 15px;
+    font-size: 12px;
+}
+/* 前景色 */
+ .kunmaColor{
+    color: #345B9A;
+}
+
+/* 背景色设置 */
+ .kunmaColorBg{
+    background-color: #345B9A!important;
+    color: #fff!important;
+    border: 0px;
+}
+.kunmaColorBg a{
+    z-index: 5;
+}
+.kunmaColorBg .title{
+    background-color: #345B9A;
+    color: #fff;
+    border: 0px;
+}
+#popup{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.popup-content{
+    position: absolute;
+    width: 280px;
+    left: 50%;
+    margin-left: -140px;
+    top: 50%;
+    margin-top: -70px;
+    background-color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    min-height: 145px;
+}
+.popup-title{
+    font-size: 18px;
+    margin: 15px 0 6px;
+
+}
+.popup-text{
+    font-size: 15px;
+    width: 230px;
+    margin: 0 auto;
+    color: #888;
+    line-height: 21px;
+}
+.popup-btns{
+    border-top: 1px solid #e5e5e5;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.popup-btn{
+    float: left;
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+}
+.tack-popup-text{
+    margin-top: 28px;
+    font-size: 14px;
+     color: #666;
+}
+.tack-popup-title{
+    margin-bottom: 23px;
+    font-size: 17px;
+    color: #333;
+}
+.popup-btn.No{
+    color: #999;
+}
+.popup-btn.Yes{
+    color: #345B9A;
+}
+.popup-btn.Yes.punishment{
+    width: 100%;
+}
+.tack-popup-text.punishment{
+    padding: 0 40px;
+}
+input[type="number"]{-moz-appearance:textfield;}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
