@@ -175,7 +175,7 @@ public class MessageBatchController {
             message.put("type", Constant.MESSAGE_SEND);
             message.put("title",messageBatch.getTitle());
             message.put("content",messageBatch.getMessage());
-            PushResult pushResult = JiGService.sendJiGMessage(message);
+            PushResult pushResult = JiGService.sendJiGMessage2(messageBatch.getMessage(),messageBatch.getTitle(),Constant.MESSAGE_SEND+"","");
             if (null == pushResult || 0 != pushResult.getResponseCode()) {
                 messageBatch.setSended(1);
                 messageBatchService.updateByPrimaryKeySelective(messageBatch);

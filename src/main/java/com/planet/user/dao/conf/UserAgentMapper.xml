@@ -53,14 +53,13 @@
         <if test="tel !=null">
             AND Tel LIKE CONCAT(CONCAT('%',#{tel,jdbcType=VARCHAR}),'%')
         </if>
-
         order by LoginDate Desc
     </select>
     <select id="selectByUserName" resultMap="BaseResultMap" parameterType="com.planet.user.domain.UserAgent">
         select
         <include refid="Base_Column_List"/>
         from Sys_User
-        where UserName = #{username,jdbcType=VARCHAR} and Status != -1
+        where UserName = #{username,jdbcType=VARCHAR} and Status != - 1
     </select>
     <select id="selectByReferralCode" resultMap="BaseResultMap" parameterType="com.planet.user.domain.UserAgent">
         SELECT
@@ -337,4 +336,10 @@
        SELECT rowNo  FROM (SELECT  UID,(@rowNum:=@rowNum+1) AS rowNo FROM sys_user,(SELECT (@rowNum :=0) ) b where `Status` != -1  ORDER BY Point DESC) c WHERE UID = #{uid,jdbcType=INTEGER}
     </select>
 
+    <select id="selectByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where OpenID = #{openid,jdbcType=INTEGER} AND Status =1
+    </select>
 </mapper>

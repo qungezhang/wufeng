@@ -40,6 +40,8 @@ public class ProductAllVo {
 
     private Integer seriesid;
 
+    private Integer guigeid;
+
     private String imgurl;
 
     private String imgurl2;
@@ -47,6 +49,16 @@ public class ProductAllVo {
     private String modelname;
 
     private String describemodel;
+
+    private String detailimg;
+
+    public Integer getGuigeid() {
+        return guigeid;
+    }
+
+    public void setGuigeid(Integer guigeid) {
+        this.guigeid = guigeid;
+    }
 
     public Integer getStock() {
         return stock;
@@ -196,5 +208,13 @@ public class ProductAllVo {
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public String getDetailimg() {
+        return detailimg;
+    }
+
+    public void setDetailimg(String detailimg) {
+        this.detailimg = detailimg;
     }
 }

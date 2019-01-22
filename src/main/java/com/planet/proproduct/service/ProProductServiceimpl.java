@@ -109,6 +109,9 @@ public class ProProductServiceimpl implements ProProductService {
                 if (mFile.getName().equals("file2")) {
                     proProduct.setImgurl2(list.get(j).toString());
                 }
+                if (mFile.getName().equals("file3")) {
+                    proProduct.setDetailimg(list.get(j).toString());
+                }
                 j=j+1;
             }
 
@@ -182,6 +185,9 @@ public class ProProductServiceimpl implements ProProductService {
                 }
                 if (mFile.getName().equals("file2")) {
                     proProduct.setImgurl2(list.get(j).toString());
+                }
+                if (mFile.getName().equals("file3")) {
+                    proProduct.setDetailimg(list.get(j).toString());
                 }
                 j=j+1;
             }

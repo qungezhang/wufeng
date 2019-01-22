@@ -83,6 +83,8 @@ public class Job {
      */
     private Integer isDelete;
 
+    private String remarks;
+
     /**
      * 雇主姓名
      */
@@ -314,5 +316,13 @@ public class Job {
 
     public void setReceiveId(Integer receiveId) {
         this.receiveId = receiveId;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

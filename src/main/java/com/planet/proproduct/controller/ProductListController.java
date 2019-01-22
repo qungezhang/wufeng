@@ -250,6 +250,7 @@ public class ProductListController {
         String brandid = null;
         String seriesid = null;
         String sortid = null;
+        String guigeid = null;
         try {
 
             pid = request.getParameter("pid");
@@ -257,6 +258,7 @@ public class ProductListController {
             sortid = request.getParameter("sortId");
             seriesid = request.getParameter("seriesId");
             brandid = request.getParameter("brandId");
+            guigeid = request.getParameter("guigeId");
 
             if (!"".equals(pid))
                 map.put("pid", pid);
@@ -268,6 +270,9 @@ public class ProductListController {
                 map.put("seriesid", seriesid);
             if (!"".equals(brandid))
                 map.put("brandid", brandid);
+            if(!"".equals(guigeid)){
+                map.put("guigeid",guigeid);
+            }
 
 
             pagination = new Pagination(rows, page);
@@ -313,6 +318,7 @@ public class ProductListController {
         Integer seriesId = null;
         Integer brandId = null;
         String describemodel = null;
+        Integer guigeId = null;
 
         try {
 
@@ -323,6 +329,7 @@ public class ProductListController {
             price =(null!= priceTemp &&!"".equals(priceTemp))? new BigDecimal(priceTemp) : new BigDecimal(0);
             seriesId = Integer.parseInt(request.getParameter("seriesId"));
             brandId = Integer.parseInt(request.getParameter("brandId"));
+            guigeId = Integer.parseInt(request.getParameter("guigeId"));
 
 
             ProProduct proProduct = new ProProduct();
@@ -332,6 +339,7 @@ public class ProductListController {
             proProduct.setBrandid(brandId);
             proProduct.setSortid(sortId);
             proProduct.setSeriesid(seriesId);
+            proProduct.setGuigeid(guigeId);
             proProduct.setPid(String.valueOf(System.currentTimeMillis()));
 
             success = proProductService.insertSelective(proProduct, request);
@@ -370,6 +378,7 @@ public class ProductListController {
         Integer seriesId = null;
         Integer brandId = null;
         String describemodel = null;
+        Integer guigeId = null;
 
         try {
 
@@ -380,6 +389,7 @@ public class ProductListController {
             seriesId = Integer.parseInt(request.getParameter("seriesId"));
             brandId = Integer.parseInt(request.getParameter("brandId"));
             describemodel = request.getParameter("describemodel");
+            guigeId = Integer.parseInt(request.getParameter("guigeId"));
 
             ProProduct proProduct = new ProProduct();
 
@@ -389,6 +399,7 @@ public class ProductListController {
             proProduct.setBrandid(brandId);
             proProduct.setSortid(sortId);
             proProduct.setSeriesid(seriesId);
+            proProduct.setGuigeid(guigeId);
             proProduct.setDescribemodel(describemodel);
             success = proProductService.updateByPrimaryKeySelective(proProduct, request);
             if (success == 1) {

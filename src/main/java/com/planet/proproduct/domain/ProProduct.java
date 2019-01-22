@@ -17,6 +17,8 @@ public class ProProduct {
 
     private Integer seriesid;
 
+    private Integer guigeid;
+
     private Integer status;
 
     private String imgurl;
@@ -30,6 +32,16 @@ public class ProProduct {
     private String stay1;
 
     private String stay2;
+
+    private String detailimg;
+
+    public Integer getGuigeid() {
+        return guigeid;
+    }
+
+    public void setGuigeid(Integer guigeid) {
+        this.guigeid = guigeid;
+    }
 
     public String getPid() {
         return pid;
@@ -142,5 +154,13 @@ public class ProProduct {
 
     public void setStay2(String stay2) {
         this.stay2 = stay2 == null ? null : stay2.trim();
+    }
+
+    public String getDetailimg() {
+        return detailimg;
+    }
+
+    public void setDetailimg(String detailimg) {
+        this.detailimg = detailimg;
     }
 }

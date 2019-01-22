@@ -232,13 +232,28 @@
                                 width: 10,
                                 hidden: false
                             },
+                            {
+                                title: "详情图片",
+                                field: "detailimg",
+                                formatter: function (data) {
+                                    if (data == null || data == "" || data == "null") {
+                                        return "";
+                                    } else {
+                                        return "<img  src='/static/img/img.png' style='height: 20px;width: 20px' onclick='openImg(" + JSON.stringify(data) + ")'/>";
+                                    }
+                                },
+                                width: 10,
+                                hidden: false
+                            },
 
                             {
                                 title: "操作",
                                 field: "operate",
                                 formatter: function (data, rowData) {
                                     if (data == null) {
-                                        return "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='修改' type='button' onclick='openAddDiv(false," + JSON.stringify(rowData) + ")'/> <input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='删除' type='button' onclick='removeProduct(" + JSON.stringify(rowData) + ")'/>";
+                                        return "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='修改' type='button' onclick='openAddDiv(false," + JSON.stringify(rowData) + ")'/>" +
+                                                " <input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='删除' type='button' onclick='removeProduct(" + JSON.stringify(rowData) + ")'/>" +
+                                            " <input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='推送' type='button' onclick='sendProduct(" + JSON.stringify(rowData) + ")'/>";
                                     } else {
                                         return "";
                                     }
@@ -267,6 +282,31 @@
             ;
         }
 
+        function sendProduct(data) {
+            var pid = data.pid;
+            $.messager.confirm('提示', '确定要推送该任务吗？', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: "/job/sengMassage",
+                        dataType: "json",
+                        type: "post",
+                        data: {
+                            title:"产品推送",
+                            content: "给你推荐了一个超值产品，要不要看看呢",
+                            type:'2',
+                            sn:pid
+                        },
+                        error: function () {
+                            alert("系统错误!");
+                        },
+                        success: function (data) {
+                            $.messager.confirm("提示", data.msg);
+                            $("#productTable").datagrid("reload");
+                        }
+                    });
+                }
+            });
+        }
         /**
          * search
          */
@@ -277,6 +317,7 @@
             var brandId = $("#search_brandId").combobox("getValue");
             var seriesId = $("#search_seriesId").combobox("getValue");
             var sortId = $("#search_sortId").combobox("getValue");
+            var guigeId = $("#search_guigeId").combobox("getValue");
 
 
             $("#productTable").datagrid({
@@ -287,7 +328,8 @@
 //                    pType: pType,
                     brandId: brandId,
                     seriesId: seriesId,
-                    sortId: sortId
+                    sortId: sortId,
+                    guigeId:guigeId
                 }
             });
             $('#win').window('close');
@@ -343,6 +385,18 @@
             $("#add_seriesId").combobox("readonly", false);
         }
 
+        function reloadguigeId() {
+            var parentId = $("#add_seriesId").combobox("getValue");
+            $("#add_guigeId").combobox("reload", "/dict/listDidAndDicName?type=4&parentId=" + parentId);
+            $("#add_guigeId").combobox("readonly", false);
+        }
+
+        function reloadSearchguigeId(){
+            var parentId = $("#search_seriesId").combobox("getValue");
+            $("#search_guigeId").combobox("reload", "/dict/listDidAndDicName?type=4&parentId=" + parentId);
+            $("#search_guigeId").combobox("readonly", false);
+        }
+
         function clearBrandId() {
             $("#add_brandId").combobox("clear");
         }
@@ -350,11 +404,17 @@
         function clearSeriesId() {
             $("#add_seriesId").combobox("clear");
         }
+        function clearguigeId() {
+            $("#add_guigeId").combobox("clear");
+        }
         function clearSearchBrandId() {
             $("#search_brandId").combobox("clear");
         }
         function clearSearchSeriesId() {
             $("#search_seriesId").combobox("clear");
+        }
+        function clearSearchguigeId() {
+            $("#search_guigeId").combobox("clear");
         }
 
         var firstOpenAddDiv = true;
@@ -376,6 +436,8 @@
             $("#add_file").textbox("setValue", "");
             $("#add_file2").textbox("setText", "");
             $("#add_file2").textbox("setValue", "");
+            $("#add_file3").textbox("setText", "");
+            $("#add_file3").textbox("setValue", "");
             if (isAdd) {
                 $('#addDiv').window({
                     title: "添加"
@@ -383,6 +445,7 @@
                 $('#addDiv').css({"height": "310px"});
                 $("#productImg").css({"display": "none"});
                 $("#productImg2").css({"display": "none"});
+                $("#productImg3").css({"display": "none"});
                 $("#add_productName").textbox("setText", "");
                 $("#add_price").textbox("setText", "");
                 $("#add_describemodel").val('');
@@ -403,10 +466,13 @@
                 $("#productImg").attr("src", imgurl + data.imgurl);
                 $("#productImg2").css({"display": "block"});
                 $("#productImg2").attr("src", imgurl + data.imgurl2);
+                $("#productImg3").css({"display": "block"});
+                $("#productImg3").attr("src", imgurl + data.detailimg);
 
                 //清空图片的标记, 默认为0 不清空, 如果为1 就清空
                 $("#productImg_").val(0);
                 $("#recommandImg_").val(0);
+                $("#detailImg_").val(0);
 
                 $('#addDiv').css({"height": "400px"});
                 $("#add_pid").val(data.pid);
@@ -425,12 +491,12 @@
                 $("#add_sortId").combobox("select", data.sortid);
                 $("#add_brandId").combobox("select", data.brandid);
                 $("#add_seriesId").combobox("select", data.seriesid);
-
+                $("#add_guigeId").combobox("select", data.guigeid);
             }
 
             $("#add_brandId").combobox("readonly", true);
             $("#add_seriesId").combobox("readonly", true);
-
+            $("#add_guigeId").combobox("readonly", true);
 
             $('#addDiv').window('open');  // open a window
             $('#addDiv').window('center');
@@ -548,6 +614,12 @@
             $("#productImg2").css({'display': 'none'});
         }
 
+        function removedetailImg() {
+            //清空图片的标记, 默认为0 不清空, 如果为1 就清空
+            $("#detailImg_").val(1);
+            $("#productImg3").css({'display': 'none'});
+        }
+
     </script>
 
 </head>
@@ -580,6 +652,15 @@
               clearSearchSeriesId();
               }"/>
     系列：<input id="search_seriesId" class="easyui-combobox"
+              data-options="valueField: 'did',textField: 'dictname',
+              onSelect:function(selection){
+              reloadSearchguigeId();
+              },
+              onChange:function(newValue,oldValue){
+              clearSearchguigeId();
+              }"/>
+
+    规格：<input id="search_guigeId" class="easyui-combobox"
               data-options="valueField: 'did',textField: 'dictname'"/>
     &nbsp<a class="easyui-linkbutton" onclick="searchProduct()" data-options="iconCls:'icon-search'"
             style="margin:5px 5px 5px 0px;">查询</a>
@@ -644,7 +725,19 @@
                     </tr>
                     <tr>
                         <td>系列:</td>
-                        <td><input id="add_seriesId" name="seriesId" class="easyui-combobox" required="required"
+                        <td><input id="add_seriesId" name="seriesId" class="easyui-combobox"  style="width: 80%" required="required"
+                                   data-options="valueField: 'did',textField: 'dictname',
+                                   onSelect:function(selection){
+                                       reloadguigeId();
+                                    },
+                                    onChange:function(newValue,oldValue){
+                                        clearguigeId();
+                                    }"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>规格:</td>
+                        <td><input id="add_guigeId" name="guigeId" class="easyui-combobox" required="required"
                                    data-options="valueField: 'did',textField: 'dictname'" style="width: 80%"/>
                         </td>
                     </tr>
@@ -679,6 +772,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                            <%--<input type="file" id="file" name="file" style="width:90%"/>--%>
+                            <input class="easyui-filebox" id="add_file3" name="file3" style="width:90%"
+                                   data-options="
+                            buttonText: '选择详情图片',
+                            buttonAlign: 'left',
+                            onChange:function(path){
+                            $('#productImg3').attr('src',$(this).filebox('getValue'));
+                            }"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>产品图:</td>
                         <td>
                             <img id="productImg" src=""
@@ -705,10 +810,24 @@
                                style="margin: 5px">清除图片</a>
                         </td>
                     </tr>
+                    <tr>
+                        <td>详情图:</td>
+                        <td>
+                            <img id="productImg3" src=""
+                                 style="width: 290px;height:290px;display: none;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a class="easyui-linkbutton" onclick="removedetailImg()"
+                               style="margin: 5px">清除图片</a>
+                        </td>
+                    </tr>
                 </table>
 
                 <input id="productImg_" name="productImg_" type="hidden" value="0"/>
                 <input id="recommandImg_" name="recommandImg_" type="hidden" value="0"/>
+                <input id="detailImg_" name="detailImg_" type="hidden" value="0"/>
             </form>
         </div>
         <div data-options="region:'center'" style="text-align:center;height:12%">

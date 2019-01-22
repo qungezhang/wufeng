@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-
+//    RestTemplate restTemplate;
     /**
      * @return
      */
@@ -45,6 +46,7 @@ public class AdminController {
     @RequestMapping("/menu")
     public ModelAndView menu(HttpServletRequest request) {
         //init
+//        restTemplate.p
         Map<String, Object> model = new HashMap<>();
         model.put("admin", request.getSession().getAttribute("admin"));
         return new ModelAndView("/menu/menu", model);

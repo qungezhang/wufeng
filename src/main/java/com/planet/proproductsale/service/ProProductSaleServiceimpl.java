@@ -124,4 +124,9 @@ public class ProProductSaleServiceimpl implements ProProductSaleService {
     public  int selectByPid(Map<String,Object> map) throws Exception {
         return proProductSaleMapper.selectByPid(map);
     }
+
+    @Override
+    public ProProductSale selectByPid2(String pid) throws Exception {
+        return proProductSaleMapper.selectByPid2(pid);
+    }
 }

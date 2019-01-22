@@ -1,411 +1,433 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <meta name = "format-detection" content = "telephone=no">
-        <title></title>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-        <style media="screen">
-            .gray{
-                opacity: 0.5
-            }
-            .countdown{
-                font-size: 12px;
-                position: absolute;
-                display: block;
-                width: 100%;
-                text-align: center;
-                padding-top: 60%;
-                top: 0;
-            }
-            .clearcountdown{
-                color: #00FF23;
-            }
-            .logotext{
-                position: absolute;
-                font-size: 12px;
-                color: #365d98;
-                display: inline-block;
-                width: 100%;
-                bottom: 15px;
-                left: 0;
-            }
-            a{
-                color: inherit;
-            }
-            ul{
-                list-style: none;
-                margin: 0;
-            }
-            .f-left{
-                display: block;
-                float: left;
-            }
-            .f-right{
-                display: block;
-                float: right;
-            }
-            /* 主页气泡 */
-            html,body{
-                height: 100%;
-                padding: 0;
-                margin: 0;
+<head>
+    <meta charset="utf-8">
+    <meta name = "format-detection" content = "telephone=no">
+    <title></title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <style media="screen">
+        .gray{
+            opacity: 0.5
+        }
+        @font-face {
+            font-family: "百度综艺简体";
+            src:
 
-            }
-            .integral-index-Bg{
-                background-image: url('img/images/shouye.png');
-                width: 100%;
-                height: 100%;
-                background-repeat: no-repeat;
-                background-size: cover;
-		            background-position:center;
-            }
-            /* 泡泡区域 */
-            #addPage{
-                padding: 20px 0;
-            }
-            .paopao{
-                height: 330px;
-                position: relative;
-                 margin-top: 60px;
-            }
-            .battery{
-                position: absolute;
-                width: 70px;
-                height: 105px;
-                background-image: url('img/images/Battery-BG.png');
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: cover;
-                left: 50%;
-                margin-left: -35px;
-                top: 110px;
-                text-align: center;
-                font-size: 10px;
-                z-index: 999;
-            }
-            .battery-num{
-                display: block;
-                padding: 25px 0 4px;
-                line-height: 17px;
-                font-size: 20px;
-            }
-            .paopao-item{
-                position: absolute;
-                width: 12%;
-                min-width: 70px;
-                max-width: 80px;
-                font-size: 9px;
-                text-align: center;
-                color: #ebf430;
-                z-index: 999;
-                animation: myfirst 2s infinite;
-            }
-            .paopao-item span{
-                display: block;
-            }
-            @keyframes myfirst {
-                0% {
-                    transform: translate(0px, 0px);
-                }
-                50% {
-                    transform: translate(0px, -10px);
-                }
-                100% {
-                    transform: translate(0px, 0px);
-                }
-            }
-            .paopao-item img{
-                width: 100%;
-                height: auto;
-                margin-bottom: 5px;
-            }
-            .paopao-item.paopao-logo img{
-                width: 60px;
-            }
-            .paopao-item:nth-child(1){
-                left: 5%;
-                top: 50px;
-            }
-            .paopao-item:nth-child(2){
-                left: 28%;
-                top: 0;
-            }
-            .paopao-item:nth-child(3){
-                right: 28%;
-                top: 0;
-            }
-            .paopao-item:nth-child(4){
-                right: 5%;
-                top: 50px;
-            }
-            .paopao-item:nth-child(5){
-                left: 20%;
-                top: 35%;
-            }
-            .paopao-item:nth-child(6){
-                right: 20%;
-                top: 35%;
-            }
-            .paopao-item:nth-child(7){
-                left: 5%;
-                bottom: 60px;
-            }
-            .paopao-item:nth-child(8){
-                left: 28%;
-                bottom: 10px;
-            }
-            .paopao-item:nth-child(9){
-                right: 28%;
-                bottom: 10px;
-            }
-            .paopao-item:nth-child(10){
-                right: 5%;
-                bottom: 60px;
-            }
-            /* 排行榜内容 */
-            .integral-rankings{
-                width: 100%;
-                height: auto;
-                overflow: hidden;
-                margin: 0 auto;
-                border-radius: 5px;
-                background-color: #fafafa;
+                    url("./BDZYJT.ttf")
 
-            }
-            .integral-rankings-header{
-                padding-left: 0;
-                height: 50px;
-                font-weight: bold;
-                font-size: 16px;
-                text-align: center;
-                line-height: 50px;
-            }
-            .rankings-list{
-                margin-bottom: 10px;
-                border-top: 1px solid #dcdcdc;
-                padding-left: 0
-            }
-            .rankings-item{
-                height: 45px;
-                border-bottom: 1px solid #dcdcdc;
-                margin: 0 15px;
-                line-height: 45px;
-                text-align: center;
-                font-size: 13px;
-                clear: both;
-                overflow: hidden;
-            }
-            .rankings-item > span{
-                display: inline-block;
 
-            }
-            .rankings-item.list-title{
-                font-size: 14px!important;
-                font-weight: bold;
-            }
-            .rankings-item .sequence,.rankings-item  .integral-num{
-                width: 75px;
-                position: relative;
-            }
-            .rankings-item .sequence .ico-crown{
-                display: inline-block;
-                position: absolute;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: cover;
-                width: 13px;
-                height: 10px;
-                top: 50%;
-                margin-top: -5px;
-                left: 0;
-            }
-            .rankings-Box .rankings-item:nth-child(1) .ico-crown{
-                background-image: url('img/images/crown-1.png');
-            }
-            .rankings-Box .rankings-item:nth-child(2) .ico-crown{
-                background-image: url('img/images/crown-2.png');
-            }
-            .rankings-Box .rankings-item:nth-child(3) .ico-crown{
-                background-image: url('img/images/crown-3.png');
-            }
-            .gray .countdown.clearcountdown{
-                color: #fff;
-            }
+        }
+        .countdown{
+            font-size: 12px;
+            position: absolute;
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding-top: 60%;
+            top: 0;
+        }
+        .clearcountdown{
+            color: #00FF23;
+        }
+        .logotext{
+            position: absolute;
+            font-size: 12px;
+            color: #365d98;
+            display: inline-block;
+            width: 100%;
+            bottom: 15px;
+            left: 0;
+        }
+        a{
+            color: inherit;
+        }
+        ul{
+            list-style: none;
+            margin: 0;
+        }
+        .f-left{
+            display: block;
+            float: left;
+        }
+        .f-right{
+            display: block;
+            float: right;
+        }
+        /* 主页气泡 */
+        html,body{
+            height: 100%;
+            padding: 0;
+            margin: 0;
 
-        </style>
-    </head>
-    <body>
-        <div id="addPage" class="integral-index-Bg">
-            <!-- 正文 -->
-            <div class="paopao">
-                <div class="battery">
-                    <div class="battery-num">
-                        0
-                    </div>
-                    <div class="">
-                        我的积分
-                    </div>
-                    <span class="logotext">KUNMA</span>
-                </div>
-                <div id="paopaoBox">
+        }
+        .integral-index-Bg{
+            background-image: url('img/images/shouye.png');
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position:center;
+        }
+        /* 泡泡区域 */
+        #addPage{
+            padding: 20px 0;
+        }
+        .paopao{
+            height: 330px;
+            position: relative;
+            margin-top: 60px;
+        }
+        .battery{
+            position: absolute;
+            width: 70px;
+            height: 105px;
+            background-image: url('img/images/Battery-BG.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            left: 50%;
+            margin-left: -35px;
+            top: 110px;
+            text-align: center;
+            font-size: 10px;
+            z-index: 999;
+        }
+        .battery-num{
+            display: block;
+            padding: 25px 0 4px;
+            line-height: 17px;
+            font-size: 20px;
+        }
+        .paopao-item{
+            position: absolute;
+            width: 12%;
+            min-width: 70px;
+            max-width: 80px;
+            font-size: 9px;
+            text-align: center;
+            color: #ebf430;
+            z-index: 999;
+            animation: myfirst 2s infinite;
+        }
+        .paopao-item span{
+            display: block;
+        }
+        @keyframes myfirst {
+            0% {
+                transform: translate(0px, 0px);
+            }
+            50% {
+                transform: translate(0px, -10px);
+            }
+            100% {
+                transform: translate(0px, 0px);
+            }
+        }
+        .paopao-item img{
+            width: 100%;
+            height: auto;
+            margin-bottom: 5px;
+        }
+        .paopao-item.paopao-logo img{
+            width: 60px;
+        }
+        .paopao-item:nth-child(1){
+            left: 5%;
+            top: 50px;
+        }
+        .paopao-item:nth-child(2){
+            left: 28%;
+            top: 0;
+        }
+        .paopao-item:nth-child(3){
+            right: 28%;
+            top: 0;
+        }
+        .paopao-item:nth-child(4){
+            right: 5%;
+            top: 50px;
+        }
+        .paopao-item:nth-child(5){
+            left: 20%;
+            top: 35%;
+        }
+        .paopao-item:nth-child(6){
+            right: 20%;
+            top: 35%;
+        }
+        .paopao-item:nth-child(7){
+            left: 5%;
+            bottom: 60px;
+        }
+        .paopao-item:nth-child(8){
+            left: 28%;
+            bottom: 10px;
+        }
+        .paopao-item:nth-child(9){
+            right: 28%;
+            bottom: 10px;
+        }
+        .paopao-item:nth-child(10){
+            right: 5%;
+            bottom: 60px;
+        }
+        /* 排行榜内容 */
+        .integral-rankings{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin: 0 auto;
+            border-radius: 5px;
+            background-color: #fafafa;
 
-                </div>
+        }
+        .integral-rankings-header{
+            padding-left: 0;
+            height:auto;
+            font-weight: bold;
+            font-size: 17px;
+            text-align: center;
+            /*  line-height: 50px;*/
+            color:#345B9A;
+            font-family:"百度综艺简体";
+            margin:16px 0 15px 0;
+        }
+        .integral-rankings-header-bt{
+            text-align: center;
+            font-family:"PingFangSC-Regular";
+            font-size:14px;
+            font-weight:400;
+            color:rgba(51,51,51,1);
+            margin:0;
+            line-height:40px;
+            margin-bottom: 26px;
+        }
+        .rankings-list{
+            margin-bottom: 10px;
+            border-top: 1px solid #dcdcdc;
+            padding-left: 0
+        }
+        .rankings-item{
+            height: 45px;
+            border-bottom: 1px solid #dcdcdc;
+            margin: 0 15px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 13px;
+            clear: both;
+            overflow: hidden;
+        }
+        .rankings-item > span{
+            display: inline-block;
 
+        }
+        .rankings-item.list-title{
+            font-size: 14px!important;
+            font-weight: bold;
+        }
+        .rankings-item .sequence,.rankings-item  .integral-num{
+            width: 75px;
+            position: relative;
+        }
+        .rankings-item .sequence .ico-crown{
+            display: inline-block;
+            position: absolute;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 13px;
+            height: 10px;
+            top: 50%;
+            margin-top: -5px;
+            left: 0;
+        }
+        .rankings-Box .rankings-item:nth-child(1) .ico-crown{
+            background-image: url('img/images/crown-1.png');
+        }
+        .rankings-Box .rankings-item:nth-child(2) .ico-crown{
+            background-image: url('img/images/crown-2.png');
+        }
+        .rankings-Box .rankings-item:nth-child(3) .ico-crown{
+            background-image: url('img/images/crown-3.png');
+        }
+        .gray .countdown.clearcountdown{
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+<div id="addPage" class="integral-index-Bg">
+    <!-- 正文 -->
+    <div class="paopao">
+        <div class="battery">
+            <div class="battery-num">
+                0
             </div>
-            <div  class="integral-rankings">
-                <div class="integral-rankings-header">
-                    积分排行榜
-                </div>
-                <ul class="rankings-list">
-                    <!-- 大标题 -->
-                    <li class="rankings-item list-title">
+            <div class="">
+                我的积分
+            </div>
+            <span class="logotext">KUNMA</span>
+        </div>
+        <div id="paopaoBox">
+
+        </div>
+
+    </div>
+    <div  class="integral-rankings">
+        <div class="integral-rankings-header" >
+            工业机电一站式采购中心
+        </div>
+        <p class="integral-rankings-header-bt">每日登录摘积分 特价转发赚差价 交易积分兑现金</p>
+        <ul class="rankings-list">
+            <!-- 大标题 -->
+            <li class="rankings-item list-title">
                         <span class="sequence f-left">
                             名次
                         </span>
-                        <span class="user-id">
+                <span class="user-id">
                             用户名
                         </span>
-                        <span class="integral-num f-right">
+                <span class="integral-num f-right">
                             积分
                         </span>
-                    </li>
-					<div class="rankings-list rankings-Box"></div>
+            </li>
+            <div class="rankings-list rankings-Box"></div>
 
-                </ul>
-            </div>
-        </div>
-    <script type="text/javascript">
-        // http://www.app/index.html?uid=888
-        // 获取URL里的uid参数
-        function getQueryString(name) {
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    // http://www.app/index.html?uid=888
+    // 获取URL里的uid参数
+    function getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
         if (r != null)
             return unescape(r[2]);
-            return null;
-        }
-        var getUid = getQueryString("uid");
-        // 数据库域名
-        // var url = 'http://www.comeon365.com/';
-        // var url = 'http://cm.supergk.com/';
-        // var url = "http://10.128.203.229:6080/"
-        var url = "http://viviyy.51vip.biz/"
-        // 用户ＵＩＤ
-        var uid = getUid;
-        // var uid = 825;
-        console.log(uid);
-        // 测试
-        // var uid = 825;
-        // 用户积分
-        var userPoint = 0
-        var pointBalloonList = [];
-        // 积分我的
-        var userAgent = '';
-        // 排行榜
-        var userAgentList = '';
-        //实时刷新时间单位为毫秒
-        var nowtime = new Date().getHours()*60 +new Date().getMinutes()
+        return null;
+    }
+    var getUid = getQueryString("uid");
+    // 数据库域名
+    var url = 'http://www.comeon365.com/';
+    // var url = 'http://cm.supergk.com/';
+    // var url = "http://10.128.203.229:6080/"
+    // var url = "http://viviyy.51vip.biz/"
+    // 用户ＵＩＤ
+    var uid = getUid;
+    // var uid = 825;
+    console.log(uid);
+    // 测试
+    // var uid = 825;
+    // 用户积分
+    var userPoint = 0
+    var pointBalloonList = [];
+    // 积分我的
+    var userAgent = '';
+    // 排行榜
+    var userAgentList = '';
+    //实时刷新时间单位为毫秒
+    var nowtime = new Date().getHours()*60 +new Date().getMinutes()
 
-        function getIdex() {
-             nowtime = new Date().getHours()*60 +new Date().getMinutes()
-            $.ajax({
-                type : "GET",
-                url : url + "pointApi/get-pointRanking2?t=" + new Date().getTime()+"&uid=" + uid,
-                dataType : "JSON",
-                success : function(data) {
-                    $('#paopaoBox').empty()
-					$('.rankings-Box').empty()
-                    console.log("获取成功");
-                    console.log(data);
-                    var data = data.result ;
-                    pointBalloonList = data.pointBalloonList;
-                    userAgent = data.userAgent;
-                    userAgentList = data.userAgentList;
-                    var pointBalloonList = data.pointBalloonList;
-                    paopaoShow(pointBalloonList)
-                    // 个人积分
-                    $(".battery-num").html(userAgent.point)
-                    // 排行版
-                    for (var i = 0; i < userAgentList.length; i++) {
-                        var htmlLi = '<li class="rankings-item"><span class="sequence f-left"><span class="ico-crown"></span>'+ (i+1) +'</span><span class="user-id">'+ userAgentList[i].username +'</span><span class="integral-num f-right">'+ userAgentList[i].point +'</span></li>'
-                        $('.rankings-Box').append(htmlLi)
-                    }
+    function getIdex() {
+        nowtime = new Date().getHours()*60 +new Date().getMinutes()
+        $.ajax({
+            type : "GET",
+            url : url + "pointApi/get-pointRanking2?t=" + new Date().getTime()+"&uid=" + uid,
+            dataType : "JSON",
+            success : function(data) {
+                $('#paopaoBox').empty()
+                $('.rankings-Box').empty()
+                console.log("获取成功");
+                console.log(data);
+                var data = data.result ;
+                pointBalloonList = data.pointBalloonList;
+                userAgent = data.userAgent;
+                userAgentList = data.userAgentList;
+                var pointBalloonList = data.pointBalloonList;
+                paopaoShow(pointBalloonList)
+                // 个人积分
+                $(".battery-num").html(userAgent.point)
+                // 排行版
+                for (var i = 0; i < userAgentList.length; i++) {
+                    var htmlLi = '<li class="rankings-item"><span class="sequence f-left"><span class="ico-crown"></span>'+ (i+1) +'</span><span class="user-id">'+ userAgentList[i].username +'</span><span class="integral-num f-right">'+ userAgentList[i].point +'</span></li>'
+                    $('.rankings-Box').append(htmlLi)
                 }
-            });
-        }
-        getIdex()
-        setInterval('getIdex()',60000);
-        // 排序
-        // 泡泡渲染
-        function paopaoShow(pointBalloonList){
-            var index = 0;
-            for (var i = 0; i < pointBalloonList.length; i++) {
-                var gray =''
-                var clearcountdown = ''
-                var countdownshow  = ''
-                var countdown = pointBalloonList[i].time - nowtime
-                if (countdown<=0||pointBalloonList[i].type==2) {
-                    countdownshow = pointBalloonList[i].point + '分'
-                    clearcountdown ='clearcountdown'
-                }else if(pointBalloonList[i].type==1&&countdown>0){
-                    var hours =  (countdown/60)<10?'0'+parseInt(countdown/60):parseInt(countdown/60)
-                    var min = (countdown%60)<10?'0'+countdown%60:countdown%60
-                    countdownshow = hours + ':' + min
-                    clearcountdown = ''
-                }
-                if (pointBalloonList[i].brandEnergyStatus==1) {
-                    gray = 'gray'
-                    countdownshow = '生成中'
-                }
-                imgUrl = 'http://image.comeon365.com/' + pointBalloonList[i].icon;
-
-                var box = '<div class="paopao-item '+gray+'"><img src="'+ imgUrl +'" alt=""><span>'+pointBalloonList[i].name+'</span><span class="countdown '+clearcountdown+'">'+countdownshow+'</span></div>'
-                $('#paopaoBox').append(box)
             }
-            $('#paopaoBox .paopao-item').each(function(){
-                $(this).click(function(){
+        });
+    }
+    getIdex()
+    setInterval('getIdex()',60000);
+    // 排序
+    // 泡泡渲染
+    function paopaoShow(pointBalloonList){
+        var index = 0;
+        for (var i = 0; i < pointBalloonList.length; i++) {
+            var gray =''
+            var clearcountdown = ''
+            var countdownshow  = ''
+            var countdown = pointBalloonList[i].time - nowtime
+            if (countdown<=0||pointBalloonList[i].type==2) {
+                countdownshow = pointBalloonList[i].point + '分'
+                clearcountdown ='clearcountdown'
+            }else if(pointBalloonList[i].type==1&&countdown>0){
+                var hours =  (countdown/60)<10?'0'+parseInt(countdown/60):parseInt(countdown/60)
+                var min = (countdown%60)<10?'0'+countdown%60:countdown%60
+                countdownshow = hours + ':' + min
+                clearcountdown = ''
+            }
+            if (pointBalloonList[i].brandEnergyStatus==1) {
+                gray = 'gray'
+                countdownshow = '生成中'
+            }
+            imgUrl = 'http://image.comeon365.com/' + pointBalloonList[i].icon;
 
-                    index = $(this).index()
-                    console.log('-------'+index);
-                    if (pointBalloonList[index].time > nowtime&&pointBalloonList[index].type ==1) {
-                        console.log('未成熟');
-                    }else if (pointBalloonList[index].brandEnergyStatus ==1) {
-                        console.log('摘取过');
-                    }else{
-                        if (pointBalloonList[index].type ==2) {
-                            // 点击变消失
-                            $(this).fadeOut(300);
-                        }else {
-                            $(this).addClass("gray");
-                        }
-                        var audio = document.createElement("audio");
-                        audio.src = "img/click.mp3";
-                        audio.play();
-                        $.ajax({
-                            type : "GET",
-                            url : url + "pointApi/gather-energyBall?uid=" + uid + "&pointBalloonId=" + pointBalloonList[index].id,
-                            dataType : "JSON",
-                            success : function(data) {
-                                console.log("ok");
-                                getIdex()
-                            },
-                            error : function(){
-                                console.log("error");
-                            }
-                        })
-                    }
-
-                })
-            })
+            var box = '<div class="paopao-item '+gray+'"><img src="'+ imgUrl +'" alt=""><span>'+pointBalloonList[i].name+'</span><span class="countdown '+clearcountdown+'">'+countdownshow+'</span></div>'
+            $('#paopaoBox').append(box)
         }
+        $('#paopaoBox .paopao-item').each(function(){
+            $(this).click(function(){
+
+                index = $(this).index()
+                console.log('-------'+index);
+                if (pointBalloonList[index].time > nowtime&&pointBalloonList[index].type ==1) {
+                    console.log('未成熟');
+                }else if (pointBalloonList[index].brandEnergyStatus ==1) {
+                    console.log('摘取过');
+                }else{
+                    if (pointBalloonList[index].type ==2) {
+                        // 点击变消失
+                        $(this).fadeOut(300);
+                    }else {
+                        $(this).addClass("gray");
+                    }
+                    var audio = document.createElement("audio");
+                    audio.src = "img/click.mp3";
+                    audio.play();
+                    $.ajax({
+                        type : "GET",
+                        url : url + "pointApi/gather-energyBall?uid=" + uid + "&pointBalloonId=" + pointBalloonList[index].id,
+                        dataType : "JSON",
+                        success : function(data) {
+                            console.log("ok");
+                            getIdex()
+                        },
+                        error : function(){
+                            console.log("error");
+                        }
+                    })
+                }
+
+            })
+        })
+    }
 
 
 
 
 
-    </script>
+</script>
 
-   </body>
+</body>
 </html>

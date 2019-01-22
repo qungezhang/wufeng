@@ -39,4 +39,6 @@ public interface UserService {
     List<UserAgent> getPointRanking() throws Exception;
 
     Integer findUserRank(Integer uid);
+
+    UserAgent selectByOpenid(String openid);
 }

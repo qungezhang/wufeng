@@ -97,6 +97,22 @@
             },
             width: 40
           },
+            {
+                title: "位置",
+                field: "type",
+                formatter: function (data) {
+                    if (data == null) {
+                        return "-";
+                    } else if (data == 2) {
+                        return "Android广告页";
+                    }else if (data == 1) {
+                        return "iOS广告页";
+                    } else if (data == 0) {
+                        return "首页幻灯片";
+                    }
+                },
+                width: 40
+            },
           {
             title: "操作",
             field: "operate",
@@ -227,6 +243,17 @@
                     <option value="0">否</option>
                     <option value="1">是</option>
                   </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                位置:
+              </td>
+              <td><select class="easyui-combobox" id="add_type" name="type" style="width:80%">
+                <option value="0">首页幻灯片</option>
+                <option value="1">iOS广告页</option>
+                <option value="2">Android广告页</option>
+              </select>
               </td>
             </tr>
             <tr>

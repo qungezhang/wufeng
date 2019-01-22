@@ -1,5 +1,6 @@
 package com.planet.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.planet.common.Constant;
 import com.planet.common.mybatis.plugins.page.Pagination;
@@ -8,6 +9,8 @@ import com.planet.invoice.domain.Invoice;
 import com.planet.invoice.service.InvoiceService;
 import com.planet.job.domain.Job;
 import com.planet.job.service.JobService;
+import com.planet.menuopen.domain.Menuopen;
+import com.planet.menuopen.service.MenuopenService;
 import com.planet.message.domain.Message;
 import com.planet.message.service.MessageBatchService;
 import com.planet.message.service.MessageService;
@@ -25,15 +28,19 @@ import com.planet.sysfile.domain.SysFile;
 import com.planet.sysfile.service.SysFileService;
 import com.planet.user.domain.UserAgent;
 import com.planet.user.service.UserService;
+import com.planet.utils.HttpUtil;
 import com.planet.vip.domain.Vip;
 import com.planet.vip.service.VipService;
 import com.planet.vo.*;
+import com.planet.wechat.Utils.WeChatConf;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +52,8 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 个人中心
@@ -94,6 +103,11 @@ public class CustomerController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private MenuopenService menuopenService;
+
+
 
     /**
      * @api {post} /personal/register 注册
@@ -283,37 +297,146 @@ public class CustomerController {
      */
     @RequestMapping("/login")
     @ResponseBody
-    public Map<String, Object> login(String username, String password) {
+    public  Map<String, Object> login(HttpServletRequest request, String username, String password, String identifyCode, String status, String Wechatcode) {
+        /**status=0,账号密码登录   status=1,手机验证码登录  status=2,微信登录*/
+        //加锁
+        Lock lock = new ReentrantLock();
+        lock.lock();
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> map_point= new HashMap<>();
+        Map<String,Object> point = new HashMap<>();
         UserAgent userAgent = null;
-        int code;
-        String message;
+        int code=0;
+        String message="";
+
+        if(StringUtils.isEmpty(status)){
+            status = "0";
+        }
+
         try {
-            userAgent = userService.selectByUserName(username);
-            if (userAgent != null && password.endsWith(userAgent.getPassword())) {
-                Date curDate=new Date();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                df.format(curDate);
-                Date lastDate = userAgent.getLastlogindate();
-                if (lastDate!=null){
-                    long intervalMilli = curDate.getTime() - lastDate.getTime();
-                    int iday=(int) (intervalMilli / (24 * 60 * 60 * 1000));
-                    if (iday>1){
-                        map_point.put("uid", userAgent.getUid());
-                        map_point.put("message", "连续登陆送积分");
-                        map_point.put("level","login");
-                        userService.updatePoint(map_point);
-                    }
+            if(!status.equals("2")){
+                userAgent = userService.selectByUserName(username);
+            }
+
+            if(StringUtils.isEmpty(status)){
+                throw new RuntimeException("登录类型不能为空！");
+            }else if(status.equals("0")){
+                //账号密码登录
+                if (userAgent != null && password.endsWith(userAgent.getPassword())) {
+                    code = 200;
+                    message = "ok";
+                } else {
+                    throw new RuntimeException("用户名或密码错误！");
                 }
-                code = 200;
-                message = "ok";
-            } else {
-                throw new RuntimeException("用户名或密码错误！");
+            }else if(status.equals("1")){
+                //手机验证码登录
+                Object identifyCodes = request.getSession().getAttribute("identifyCode");
+                if(!StringUtils.isEmpty(identifyCodes)){
+                    identifyCodes = identifyCodes.toString();
+                    if (identifyCode == null) {
+                        code  = 500;
+                        message = "请输入验证码";
+                    }
+                    if (!identifyCodes.equals(identifyCode)) {
+                        code = 500;
+                        message = "验证码不正确";
+                    }
+                    userAgent = userService.selectByUserName(username);
+                    if(userAgent == null){
+                        throw new RuntimeException("账号不存在！");
+                    }
+                    code = 200;
+                    message = "ok";
+                }else{
+                    throw new RuntimeException("验证码不存在！");
+                }
+            }else if(status.equals("2")){
+                //微信登录
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time = sdf.format(new Date());
+                //获取access_token
+                com.alibaba.fastjson.JSONObject accessToken = getAccessToken(Wechatcode);
+                String access_token = accessToken.getString("access_token");
+                if(StringUtils.isEmpty(access_token)||"40163".equals(accessToken.getString("errcode"))){
+                    code = 300;
+                    throw new RuntimeException("code失效!");
+                }
+                String openid = accessToken.getString("openid");
+//                String access_token = accessToken.getString("access_token");
+                userAgent = userService.selectByOpenid(openid);
+                if(userAgent == null){
+                    //获取微信用户信息
+                    com.alibaba.fastjson.JSONObject username1 = getUsername(access_token, openid);
+                    String name = username1.getString("nickname");
+                    UserAgent userAgent1 = new UserAgent();
+                    userAgent1.setPassword("111111");
+                    userAgent1.setUsername(name);
+                    userAgent1.setName(name);
+                    userAgent1.setTel("");
+                    userAgent1.setVip(0);
+                    userAgent1.setStatus(1);
+                    userAgent1.setOpenid(openid);
+                    Date date = sdf.parse(time);
+                    userAgent1.setLogindate(date);
+                    userAgent1.setLastlogindate(date);
+
+                    int i = userService.insertSelective(userAgent1);
+                    if (i == 0) {
+                        code = 400;
+                        message = "登录失败";
+                    } else if (i == 1) {
+                        code = 200;
+                        message = "ok";
+                        UserAgent selectUserAgent = userService.selectByOpenid(openid);
+                        userAgent = selectUserAgent;
+                        point.put("uid", selectUserAgent.getUid());
+                        point.put("referralcode", "");
+                        point.put("level","register");
+                        userService.updatePoint(point);
+
+                    }
+                }else{
+//                    map.put("bindingPhone","0");
+                    code = 200;
+                    message = "ok";
+                }
+                if(userAgent.getPoint()==0&&StringUtils.isEmpty(userAgent.getTel())){
+                    map.put("bindingPhone","1");
+                }else{
+                    map.put("bindingPhone","0");
+                }
+            }
+
+            //判断登录时间
+            Date curDate=new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            df.format(curDate);
+            Date lastDate = userAgent.getLastlogindate();
+            if (lastDate!=null){
+                long intervalMilli = curDate.getTime() - lastDate.getTime();
+                int iday=(int) (intervalMilli / (24 * 60 * 60 * 1000));
+                if (iday>1){
+                    map_point.put("uid", userAgent.getUid());
+                    map_point.put("message", "连续登陆送积分");
+                    map_point.put("level","login");
+                    userService.updatePoint(map_point);
+                }
             }
         } catch (Exception e) {
+            userAgent = null;
             code = 400;
             message = e.getMessage();
+        }finally {
+            lock.unlock();
+        }
+
+
+        List<Menuopen> menuopens = menuopenService.getmenuopenList(new HashMap<String, Object>());
+        if(!menuopens.isEmpty()){
+            map.put("jifenOpen",menuopens.get(0).getIsOpen());
+        }else{
+            map.put("jifenOpen","1");
         }
         map.put("code", code);
         map.put("message", message);
@@ -321,6 +444,102 @@ public class CustomerController {
         return map;
     }
 
+    //通过微信code，获取token
+    public com.alibaba.fastjson.JSONObject getAccessToken(String code){
+        String url = WeChatConf.get_access_token + "?appid="+WeChatConf.LOGIN_APPID+"&secret="+WeChatConf.LOGIN_APPSECRET+"&code="+code+"&grant_type=authorization_code";
+        String s = HttpUtil.get(url);
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(s);
+//        jsonObject.getString("access_token");
+        return jsonObject;
+    }
+
+    //刷新或续期access_token
+//    public String refreshToken(){
+//
+//    }
+
+    //获取用户信息
+    public com.alibaba.fastjson.JSONObject getUsername(String token,String openid){
+        String url = WeChatConf.get_user_info+"?access_token="+token+"&openid="+openid;
+        String s = HttpUtil.get(url);
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(s);
+        return jsonObject;
+    }
+
+    /**
+     * 绑定手机号
+     * @param openid
+     * @param username
+     * @return
+     */
+    @RequestMapping("/bindingPhone")
+    @ResponseBody
+    public Map<String,Object> bindingPhone(HttpServletRequest request,String identifyCode,String openid,String username){
+        Map<String,Object> map = new HashMap<>();
+        int code=0;
+        String message="";
+        UserAgent userAgent2 = null;
+
+        if(StringUtils.isEmpty(openid)||StringUtils.isEmpty(username)){
+            throw new RuntimeException("标识或手机号码不能为空!");
+        }
+
+        try {
+            //获取手机验证码
+            Object identifyCodes = request.getSession().getAttribute("identifyCode");
+            if(StringUtils.isEmpty(identifyCodes)){
+                throw new RuntimeException("验证码不存在！");
+            }
+            if(!identifyCodes.equals(identifyCode)){
+                throw new RuntimeException("验证码不正确！");
+            }
+            UserAgent userAgent = userService.selectByUserName(username);
+            UserAgent userAgent1 = userService.selectByOpenid(openid);
+            if(userAgent == null && userAgent1 == null){
+                throw new RuntimeException("账号不存在！");
+            }
+            if(userAgent == null){
+                userAgent2 = userAgent1;
+                userAgent1.setUsername(username);
+                userAgent1.setPassword(username);
+                userAgent1.setTel(username);
+                int i = userService.updateByPrimaryKey(userAgent1);
+                if(i==0){
+                    code = 500;
+                    message = "绑定失败";
+                }else{
+                    code = 200;
+                    message = "绑定成功";
+                }
+            }else{
+
+                if(StringUtils.isEmpty(userAgent.getOpenid())){
+                    userAgent.setOpenid(openid);
+                    int i = userService.updateByPrimaryKey(userAgent);
+                    if(i==0){
+                        code = 500;
+                        message = "绑定失败";
+                    }else{
+                        userAgent2 = userAgent;
+                        userService.deleteByPrimaryKey(userAgent1.getUid());
+                        code = 200;
+                        message = "绑定成功";
+                    }
+                }else{
+                    code = 500;
+                    message = "绑定失败,该手机号已被绑定";
+                }
+            }
+        } catch (Exception e) {
+            code = 400;
+            message = e.getMessage();
+        }
+
+        map.put("code", code);
+        map.put("message", message);
+        map.put("result", userAgent2);
+        return map;
+    }
 
     /**
      * @api {post} /personal/getUser 获取用户信息
@@ -409,6 +628,13 @@ public class CustomerController {
             logger.error("获取用户信息错误",e);
             code = 400;
             message = e.getMessage();
+        }
+
+        List<Menuopen> menuopens = menuopenService.getmenuopenList(new HashMap<String, Object>());
+        if(!menuopens.isEmpty()){
+            resp.put("jifenOpen",menuopens.get(0).getIsOpen());
+        }else{
+            resp.put("jifenOpen","1");
         }
         resp.put("code", code);
         resp.put("message", message);
@@ -607,7 +833,7 @@ public class CustomerController {
                 String rid = ordOrderDetailVo.getOrdOrder().getRid();
                 ReqrequirementVo reqrequirementVo = null;
                 try {
-                     reqrequirementVo = reqrequirementService.selectByRid(rid);
+                    reqrequirementVo = reqrequirementService.selectByRid(rid);
                 } catch (Exception e) {
                     //需求单不影响订单的显示,故不做处理
                     logger.error("获取需求单失败", e);
@@ -2814,22 +3040,22 @@ public class CustomerController {
         int code;
         String message;
         try {
-                UserAgent userAgent;
-                userAgent = userService.selectByUserName(username);
-                if (userAgent == null) {
+            UserAgent userAgent;
+            userAgent = userService.selectByUserName(username);
+            if (userAgent == null) {
+                code = 500;
+                message = "用户不存在";
+            }else{
+                userAgent.setPassword(pw);
+                Integer status = userService.updateByPrimaryKeySelective(userAgent);
+                if (status == 0) {
                     code = 500;
-                    message = "用户不存在";
+                    message = "更新密码出错";
                 }else{
-                    userAgent.setPassword(pw);
-                    Integer status = userService.updateByPrimaryKeySelective(userAgent);
-                    if (status == 0) {
-                        code = 500;
-                        message = "更新密码出错";
-                    }else{
-                        code = 200;
-                        message = "更新成功！";
-                    }
+                    code = 200;
+                    message = "更新成功！";
                 }
+            }
 
         } catch (Exception e) {
             code = 500;
@@ -2842,4 +3068,6 @@ public class CustomerController {
         resp.put("result", null);
         return resp;
     }
+
+
 }

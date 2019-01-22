@@ -235,4 +235,11 @@
       Sn = #{sn,jdbcType=INTEGER}
     where PSID = #{psid,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByPid2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from Pro_ProductSale
+    where PID = #{pid,jdbcType=VARCHAR} order by sn ASC
+  </select>
 </mapper>

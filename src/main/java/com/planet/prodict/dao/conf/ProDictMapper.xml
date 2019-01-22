@@ -9,6 +9,7 @@
     <result column="ParentID" property="parentid" jdbcType="INTEGER"/>
     <result column="ImgUrl" property="imgurl" jdbcType="VARCHAR"/>
     <result column="Sn" property="sn" jdbcType="INTEGER" />
+    <result column="DetailImg" property="detailimg" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="selectProallVoMap" type="com.planet.vo.selectProallVo" >
@@ -26,11 +27,12 @@
     <result column="ImgUrl" property="imgurl" jdbcType="VARCHAR"/>
     <result column="Sn" property="sn" jdbcType="INTEGER" />
     <result column="bindinfo" property="bindinfo" jdbcType="VARCHAR"/>
+    <result column="DetailImg" property="detailimg" jdbcType="VARCHAR"/>
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    DID, Type, DictName, Pre, Sn ,ParentID , ImgUrl
+    DID, Type, DictName, Pre, Sn ,ParentID , ImgUrl,DetailImg
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,6 +40,13 @@
     <include refid="Base_Column_List" />
     from Pro_Dict
     where DID = #{did,jdbcType=INTEGER} order by sn ASC
+  </select>
+
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from Pro_Dict
+    where ParentID = #{did,jdbcType=INTEGER} order by sn ASC
   </select>
 
 
@@ -49,54 +58,54 @@
     select count(*) from Pro_Dict a where a.DictName=#{dictname, jdbcType=VARCHAR} and  a.ParentID=#{parentid, jdbcType=INTEGER}  order by sn ASC
   </select>
 
-<!--<select id="listPageProDict" resultMap="BaseResultMap" parameterType="com.planet.prodict.domain.ProDict">-->
-    <!--SELECT-->
-    <!--<include refid="Base_Column_List" />-->
-    <!--from Pro_Dict WHERE 1=1-->
-    <!--<if test="type !=null">-->
-     <!--AND Type =#{type, jdbcType=INTEGER}-->
-    <!--</if>-->
-    <!--<if test="pre !=null">-->
-      <!--AND Pre =#{pre, jdbcType=VARCHAR}-->
-    <!--</if>-->
-    <!--<if test="dictname != null" >-->
-      <!--AND DictName LIKE CONCAT(CONCAT('%',#{dictname,jdbcType=VARCHAR}),'%')-->
-    <!--</if>-->
+  <!--<select id="listPageProDict" resultMap="BaseResultMap" parameterType="com.planet.prodict.domain.ProDict">-->
+  <!--SELECT-->
+  <!--<include refid="Base_Column_List" />-->
+  <!--from Pro_Dict WHERE 1=1-->
+  <!--<if test="type !=null">-->
+  <!--AND Type =#{type, jdbcType=INTEGER}-->
+  <!--</if>-->
+  <!--<if test="pre !=null">-->
+  <!--AND Pre =#{pre, jdbcType=VARCHAR}-->
+  <!--</if>-->
+  <!--<if test="dictname != null" >-->
+  <!--AND DictName LIKE CONCAT(CONCAT('%',#{dictname,jdbcType=VARCHAR}),'%')-->
+  <!--</if>-->
   <!--</select>-->
 
   <select id="listPageProDict" resultMap="ProDictInfo" parameterType="com.planet.vo.ProDictVo">
-   SELECT abc.did,abc.type,abc.pre,abc.imgurl,abc.sn,abc.parentid,abc.dictname,
-(CASE abc.type WHEN 1 THEN abc.DictName WHEN 2 THEN CONCAT(abc.brand,'-',abc.DictName) WHEN 3 THEN CONCAT(abc.sort,'-',abc.brand,'-',abc.DictName) END) AS bindinfo
-FROM
-(
-SELECT a.*, (
-SELECT aa.DictName
-FROM pro_dict aa
-WHERE aa.DID= a.ParentID) AS brand,
+    SELECT abc.did,abc.type,abc.pre,abc.imgurl,abc.sn,abc.parentid,abc.dictname,abc.DetailImg,
+    (CASE abc.type WHEN 1 THEN abc.DictName WHEN 2 THEN CONCAT(abc.brand,'-',abc.DictName) WHEN 3 THEN CONCAT(abc.sort,'-',abc.brand,'-',abc.DictName ) WHEN 4 THEN abc.DictName END) AS bindinfo
+    FROM
+    (
+    SELECT a.*, (
+    SELECT aa.DictName
+    FROM pro_dict aa
+    WHERE aa.DID= a.ParentID) AS brand,
 
-(
-SELECT cc.DictName
-FROM pro_dict cc
-WHERE cc.DID =(
-SELECT bb.ParentID
-FROM pro_dict bb
-WHERE bb.DID= a.ParentID)) AS sort
-FROM pro_dict a
-WHERE 1=1
+    (
+    SELECT cc.DictName
+    FROM pro_dict cc
+    WHERE cc.DID =(
+    SELECT bb.ParentID
+    FROM pro_dict bb
+    WHERE bb.DID= a.ParentID)) AS sort
+    FROM pro_dict a
+    WHERE 1=1
 
     <if test="type !=null and type != '' ">
-    AND a.`Type` =#{type, jdbcType=INTEGER}
+      AND a.`Type` =#{type, jdbcType=INTEGER}
     </if>
     <if test="parentId !=null and parentId != '' ">
       AND a.`parentid` =#{parentId, jdbcType=INTEGER}
     </if>
     <if test="pre !=null and pre != ''">
-    AND a.Pre =#{pre, jdbcType=VARCHAR}
+      AND a.Pre =#{pre, jdbcType=VARCHAR}
     </if>
     <if test="dictname != null and dictname != '' " >
-    AND a.DictName LIKE CONCAT(CONCAT('%',#{dictname,jdbcType=VARCHAR}),'%')
+      AND a.DictName LIKE CONCAT(CONCAT('%',#{dictname,jdbcType=VARCHAR}),'%')
     </if>
-) abc order by  abc.sn ASC ,abc.did DESC
+    ) abc order by  abc.sn ASC ,abc.did DESC
   </select>
 
   <select id="listPageProDictByPre" resultMap="ProDictInfo" parameterType="com.planet.vo.ProDictVo">
@@ -153,7 +162,7 @@ WHERE 1=1
   <insert id="insert" parameterType="com.planet.prodict.domain.ProDict" >
     insert into Pro_Dict (DID, Type, DictName, ParentID,ImgUrl,
       Pre, Sn)
-    values (#{did,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{dictname,jdbcType=VARCHAR}, 
+    values (#{did,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{dictname,jdbcType=VARCHAR},
       #{pre,jdbcType=VARCHAR},#{parentid,jdbcType=INTEGER},#{imgurl,jdbcType=VARCHAR}, #{sn,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.planet.prodict.domain.ProDict" >
@@ -180,6 +189,9 @@ WHERE 1=1
       <if test="sn != null" >
         Sn,
       </if>
+      <if test="detailimg != null" >
+        DetailImg,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="did != null" >
@@ -202,6 +214,9 @@ WHERE 1=1
       </if>
       <if test="sn != null" >
         #{sn,jdbcType=INTEGER},
+      </if>
+      <if test="detailimg != null" >
+        #{detailimg,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -226,6 +241,9 @@ WHERE 1=1
       <if test="sn != null" >
         Sn = #{sn,jdbcType=INTEGER},
       </if>
+      <if test="detailimg != null" >
+        DetailImg = #{detailimg,jdbcType=VARCHAR},
+      </if>
     </set>
     where DID = #{did,jdbcType=INTEGER}
   </update>
@@ -236,7 +254,8 @@ WHERE 1=1
       Pre = #{pre,jdbcType=VARCHAR},
       ParentID = #{parentid,jdbcType=INTEGER},
       ImgUrl = #{imgurl,jdbcType=VARCHAR},
-      Sn = #{sn,jdbcType=INTEGER}
+      Sn = #{sn,jdbcType=INTEGER},
+      DetailImg = #{detailimg,jdbcType=VARCHAR},
     where DID = #{did,jdbcType=INTEGER}
   </update>
 </mapper>

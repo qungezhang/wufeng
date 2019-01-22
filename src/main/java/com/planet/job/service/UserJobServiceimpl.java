@@ -75,8 +75,17 @@ public class UserJobServiceimpl implements UserJobService{
             Job job = jobMapper.get(userJob.getJobId());
             if(null != job){
                 Integer statu = userJob.getExamineStatus();
-                job.setStatus(Constant.JOB_EXAMINE_STATUS_PASS == statu ? Constant.JOB_STATUS_02 : Constant.JOB_STATUS);
-                jobMapper.updateByPrimaryKeySelective(job);
+                /**思路：审核人的时候改变任务状态，当是审核通过时，任务状态变成审核通过
+                 * 其他也接了这个任务的用户状态改变成审核失败*/
+                if(statu == 1){
+                    job.setStatus(Constant.JOB_STATUS_02);
+                    jobMapper.updateByPrimaryKeySelective(job);
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("uid",userJob.getUid());
+                    map.put("JobId",userJob.getJobId());
+                    userJobMapper.updateByJodidAndUserid(map);
+                }
+//                job.setStatus(Constant.JOB_EXAMINE_STATUS_PASS == statu ? Constant.JOB_STATUS_02 : Constant.JOB_STATUS);
             }
             logger.info("审核成功");
         }
@@ -91,6 +100,21 @@ public class UserJobServiceimpl implements UserJobService{
         map.put("jobId",jobId);
         map.put("uid",uid);
         return userJobMapper.getUserJobListByJid(map);
+    }
+
+    @Override
+    public List<UserJob> getUserJobListByJidAndUser(Map<String, Object> map) {
+        return userJobMapper.getUserJobListByJidAndUser(map);
+    }
+
+    /**
+     * 获取接这个任务的所有人员
+     * @param jid
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getJobUserList(String jid) {
+        return userJobMapper.getJobUserList(jid);
     }
 
 

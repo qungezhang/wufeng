@@ -68,6 +68,10 @@ public class UserJobController {
                 success = userJobService.examineUserJob(userJob);
                 logger.info("审核成功");
                 if (success == 1) {
+//                    if(examineStatus.equals("")){
+//
+//                    }
+//                    userJobService.getUserJobListByJid()
                     msg = "审核成功";
                 }
             } catch (Exception e) {

@@ -19,6 +19,8 @@ public interface ProDictMapper extends MybatisMapper{
 
     ProDict selectByPrimaryKey(Integer did);
 
+    ProDict selectByPrimaryKey2(Integer did);
+
     int updateByPrimaryKeySelective(ProDict proDict);
 
     int updateByPrimaryKey(ProDict proDict);

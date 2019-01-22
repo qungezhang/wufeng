@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Li on 2016/1/24.
@@ -52,16 +51,26 @@ public class ProDictServiceimpl implements ProDictService {
 //        }else if(j>0){
 //            i=0;
 //        }
-        Map<String, Object> param = new HashMap<>();
-        param.put("did", did);
-        param.put("ret_out", "");
-        proDictMapper.selectIsUse(param);
-        int ret_out = Integer.valueOf(param.get("ret_out").toString()) ;
-        if (ret_out == 0) {
-            i = proDictMapper.deleteByPrimaryKey(did);
-        } else if (ret_out > 0) {
-            i = 2;//状态为2 表示有关联，无法删除
+//        Map<String, Object> param = new HashMap<>();
+//        param.put("did", did);
+//        param.put("ret_out", "");
+//        proDictMapper.selectIsUse(param);
+        ProDict proDict = proDictMapper.selectByPrimaryKey2(did);
+        if(proDict == null){
+            i = proDictMapper.deleteByPrimaryKey(did);;
+        }else{
+            i = 2;
         }
+//        if(proDict.getParentid().equals("0")){
+//            i = proDictMapper.deleteByPrimaryKey(did);
+//        }else{
+//            i = 2;//状态为2 表示有关联，无法删除
+//        }
+//        int ret_out = Integer.valueOf(param.get("ret_out").toString()) ;
+//        if (ret_out == 0) {
+//
+//        } else if (ret_out > 0) {
+//        }
         return i;
     }
 
@@ -86,10 +95,30 @@ public class ProDictServiceimpl implements ProDictService {
         List list = new ArrayList();
         j = proDictMapper.selectCategory(proDict);
         if (j == 0) {
+
+            MultipartHttpServletRequest mRequest = null;
             list = FileOperateUtil.upload(request);
+            mRequest = (MultipartHttpServletRequest) request;
+            Iterator<Map.Entry<String, MultipartFile>> it = mRequest.getFileMap().entrySet().iterator();
+
+            // by asta  多文件上传 判断文本ID
             if (list.size() > 0) {
-                proDict.setImgurl(list.get(0).toString());
+                while (it.hasNext()) {
+
+                    Map.Entry<String, MultipartFile> entry = it.next();
+                    MultipartFile mFile = entry.getValue();
+                    if (mFile.getName().equals("file")) {
+                        proDict.setImgurl(list.get(j).toString());
+                    }
+                    if (mFile.getName().equals("file2")) {
+                        proDict.setDetailimg(list.get(j).toString());
+                    }
+                    j=j+1;
+                }
             }
+//            if (list.size() > 0) {
+//                proDict.setImgurl(list.get(0).toString());
+//            }
             i = proDictMapper.insertSelective(proDict);
             if (i == 0) {
                 logger.info("插入失败");
@@ -161,9 +190,25 @@ public class ProDictServiceimpl implements ProDictService {
     public int updateByPrimaryKeySelective(ProDict proDict, HttpServletRequest request) throws Exception {
         int i = 0;
         List list = new ArrayList();
+        MultipartHttpServletRequest mRequest = null;
         list = FileOperateUtil.upload(request);
+        mRequest = (MultipartHttpServletRequest) request;
+        Iterator<Map.Entry<String, MultipartFile>> it = mRequest.getFileMap().entrySet().iterator();
         if (list.size() > 0) {
-            proDict.setImgurl(list.get(0).toString());
+            int j = 0;
+            // by asta  多文件上传 判断文本ID
+            while (it.hasNext()) {
+
+                Map.Entry<String, MultipartFile> entry = it.next();
+                MultipartFile mFile = entry.getValue();
+                if (mFile.getName().equals("file")) {
+                    proDict.setImgurl(list.get(j).toString());
+                }
+                if (mFile.getName().equals("file2")) {
+                    proDict.setDetailimg(list.get(j).toString());
+                }
+                j=j+1;
+            }
             i = proDictMapper.updateByPrimaryKeySelective(proDict);
         }else if(list.size()==0){
             i = proDictMapper.updateByPrimaryKeySelective(proDict);

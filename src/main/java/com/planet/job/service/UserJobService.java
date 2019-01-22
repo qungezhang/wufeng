@@ -69,4 +69,13 @@ public interface UserJobService {
      */
     List<UserJob> getUserJobListByJid(String jobId,Integer uid);
 
+    List<UserJob> getUserJobListByJidAndUser(Map<String,Object> map);
+
+    /**
+     * 获取接这个任务的所有人员
+     * @param jid
+     * @return
+     */
+    List<Map<String,Object>> getJobUserList(String jid);
+
 }

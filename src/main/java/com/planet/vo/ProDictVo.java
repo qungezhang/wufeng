@@ -20,6 +20,16 @@ public class ProDictVo {
 
     private String bindinfo;
 
+    private String detailimg;
+
+    public String getDetailimg() {
+        return detailimg;
+    }
+
+    public void setDetailimg(String detailimg) {
+        this.detailimg = detailimg;
+    }
+
     public Integer getDid() {
         return did;
     }

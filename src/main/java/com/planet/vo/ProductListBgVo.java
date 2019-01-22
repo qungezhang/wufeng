@@ -58,6 +58,16 @@ public class ProductListBgVo {
     private String seriesname;
 
     /**
+     * 系列id
+     */
+    private Integer guigeid;
+
+    /**
+     * 系列名称
+     */
+    private String guigename;
+
+    /**
      * 图片地址
      */
     private String imgurl;
@@ -79,6 +89,33 @@ public class ProductListBgVo {
      * 是否发布
      */
     private String isIssue;
+
+    private String detailimg;
+
+
+    public Integer getGuigeid() {
+        return guigeid;
+    }
+
+    public void setGuigeid(Integer guigeid) {
+        this.guigeid = guigeid;
+    }
+
+    public String getGuigename() {
+        return guigename;
+    }
+
+    public void setGuigename(String guigename) {
+        this.guigename = guigename;
+    }
+
+    public String getDetailimg() {
+        return detailimg;
+    }
+
+    public void setDetailimg(String detailimg) {
+        this.detailimg = detailimg;
+    }
 
     public String getPid() {
         return pid;

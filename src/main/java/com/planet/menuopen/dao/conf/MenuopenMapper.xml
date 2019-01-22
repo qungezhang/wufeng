@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.planet.menuopen.dao.MenuopenMapper" >
+    <resultMap id="BaseResultMap" type="com.planet.menuopen.domain.Menuopen" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="isOpen" property="isOpen" jdbcType="INTEGER" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="forsource" property="forsource" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, isOpen, code, forsource
+    </sql>
+    <select id="getMenuOpenList" resultType="com.planet.menuopen.domain.Menuopen">
+      select
+        <include refid="Base_Column_List" />
+        from sys_menuopen
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.planet.menuopen.domain.Menuopen">
+      update sys_menuopen
+      set isOpen = #{isOpen,jdbcType=INTEGER}
+      where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getOneMenuopen" resultType="com.planet.menuopen.domain.Menuopen">
+        SELECT
+        <include refid="Base_Column_List" />
+        from sys_menuopen
+        WHERE id = #{ids}
+    </select>
+</mapper>

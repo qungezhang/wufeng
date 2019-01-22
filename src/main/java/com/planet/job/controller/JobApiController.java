@@ -429,35 +429,44 @@ public class JobApiController {
      */
     @RequestMapping("/get-jobSuccess")
     @ResponseBody
-    public Map<String, Object> getJobSuccess(HttpServletRequest request, Integer uid,String jobId,String username,String mobile,String cardNo) {
+    public Map<String, Object> getJobSuccess(HttpServletRequest request, Integer uid,String jobId,String username,String mobile,String cardNo,String remark) {
         Map<String, Object> resp = new HashMap<>();
         String msg;
         int code;
 
         try {
-            //保存用户领取任务的数据
-            //修改任务表的数据
-            List<UserJob> userJobList = userJobService.getUserJobListByJid(jobId,uid);
-            if(null != userJobList && userJobList.size() > 0){
-                code=500;
-                msg = "领取任务失败";
+            //判斷用戶是否領取過該任務
+            Map<String,Object> map = new HashMap<>();
+            map.put("jobId",jobId);
+            map.put("uid",uid);
+            List<UserJob> userJobListByJidAndUser = userJobService.getUserJobListByJidAndUser(map);
+            if(userJobListByJidAndUser!=null&&userJobListByJidAndUser.size()>0){
+                code = 500;
+                msg = "领取失败，重复领取!";
             }else{
-                Job job = jobService.get(jobId);
-                job.setStatus(Constant.JOB_STATUS_01);
-                job.setModifyTime(new Date());
-                jobService.updateByPrimaryKeySelective(job);
-                //添加一条新的数据到用户任务关系表
+                //保存用户领取任务的数据
+                //修改任务表的数据
+                Job job1 = jobService.get(jobId);
+                if(!job1.getStatus().equals(0)&&!job1.getStatus().equals(1)){
+                    throw new RuntimeException("领取失败!!");
+                }
                 UserJob userJobNew = new UserJob();
                 userJobNew.setCreateTime(new Date());
-                userJobNew.setCardNo(cardNo);
+//                userJobNew.setCardNo(cardNo);
+//                userJobNew.set
+                userJobNew.setAddress(cardNo);
                 userJobNew.setExamineStatus(Constant.JOB_EXAMINE_STATUS);
                 userJobNew.setJobId(jobId);
                 userJobNew.setUid(uid);
                 userJobNew.setMobile(mobile);
                 userJobNew.setUsername(username);
                 userJobNew.setStatus(Constant.JOB_CLAIM_STATUS);
+                userJobNew.setRemark(remark);
                 userJobService.insertByPrimaryKeySelective(userJobNew);
 
+                Job job = jobService.get(jobId);
+                job.setStatus(1);
+                jobService.updateByPrimaryKeySelective(job);
                 resp.put("result",null);
                 code=200;
                 msg = "ok";
@@ -642,25 +651,27 @@ public class JobApiController {
      */
     @RequestMapping("/get-jobSuccess2")
     @ResponseBody
-    public Map<String, Object> getJobSuccess2(HttpServletRequest request, Integer uid,String jobId,String username,String mobile,String cardNo) {
+    public Map<String, Object> getJobSuccess2(HttpServletRequest request, Integer uid,String jobId,String username,String mobile,String cardNo,String remark) {
         Map<String, Object> resp = new HashMap<>();
         String msg;
         int code;
 
         try {
-            //保存用户领取任务的数据
-            //修改任务表的数据
-            List<UserJob> userJobList = userJobService.getUserJobListByJid(jobId,uid);
-            if(null != userJobList && userJobList.size() > 0){
+            //判斷用戶是否領取過該任務
+            Map<String,Object> map = new HashMap<>();
+            map.put("jobId",jobId);
+            map.put("uid",uid);
+            List<UserJob> userJobListByJidAndUser = userJobService.getUserJobListByJidAndUser(map);
+            if(userJobListByJidAndUser!=null&&userJobListByJidAndUser.size()>0){
                 code = 500;
-                resp.put("result","0");
-                msg = "领取任务失败";
+                msg = "领取失败，重复领取!";
             }else{
-                Job job = jobService.get(jobId);
-                job.setStatus(Constant.JOB_STATUS_01);
-                job.setModifyTime(new Date());
-                jobService.updateByPrimaryKeySelective(job);
-                //添加一条新的数据到用户任务关系表
+                //保存用户领取任务的数据
+                //修改任务表的数据
+                Job job1 = jobService.get(jobId);
+                if(!job1.getStatus().equals(0)&&!job1.getStatus().equals(1)){
+                    throw new RuntimeException("领取失败!!");
+                }
                 UserJob userJobNew = new UserJob();
                 userJobNew.setCreateTime(new Date());
                 userJobNew.setCardNo(cardNo);
@@ -670,8 +681,12 @@ public class JobApiController {
                 userJobNew.setMobile(mobile);
                 userJobNew.setUsername(username);
                 userJobNew.setStatus(Constant.JOB_CLAIM_STATUS);
+                userJobNew.setRemark(remark);
                 userJobService.insertByPrimaryKeySelective(userJobNew);
 
+                Job job = jobService.get(jobId);
+                job.setStatus(1);
+                jobService.updateByPrimaryKeySelective(job);
                 resp.put("result","1");
                 code=200;
                 msg = "ok";
@@ -688,6 +703,8 @@ public class JobApiController {
 
         return resp;
     }
+
+
 
 
 }

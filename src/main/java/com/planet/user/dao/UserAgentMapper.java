@@ -49,4 +49,6 @@ public interface UserAgentMapper extends MybatisMapper {
      * @return
      */
     Integer findUserRank(Integer uid);
+
+    UserAgent selectByOpenid(String openid);
 }

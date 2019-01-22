@@ -1,9 +1,9 @@
 ﻿///<reference path="jquery.d.ts" />
 var AppConfig = (function () {
     function AppConfig() {
-        // this.baseUrl = 'http://www.comeon365.com/';
+        this.baseUrl = 'http://www.comeon365.com/';
         // this.baseUrl = 'http://localhost:8080/';
-       this.baseUrl = 'http://cm.supergk.com/';
+       // this.baseUrl = 'http://cm.supergk.com/';
         //this.baseUrl = 'http://viviyy.51vip.biz/';
         this.imgBaseUrl = 'http://image.comeon365.com/';
     }
@@ -527,7 +527,7 @@ var User = (function () {
     User.login = function (phone, password) {
         var _self = this;
         var defer = $.Deferred();
-        var query = '?username=' + phone + '&password=' + password;
+        var query = '?username=' + phone + '&password=' + password + '&status=0';
         Api.get('/personal/login' + query).done(function (resp) {
             _self.userInfo = resp;
             //saveUser

@@ -33,4 +33,19 @@ public class WeChatConf {
     //微信jspai_ticket
     public static String jsapi_ticket = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
 
+    //微信登录APPID
+    public static String LOGIN_APPID = "wx4a858b70aab13755";
+
+    //微信登录APPSECRET
+    public static String LOGIN_APPSECRET = "0d465087ab430140e744856ed4dd8b61";
+
+    //获取微信登录token
+    public static String get_access_token = "https://api.weixin.qq.com/sns/oauth2/access_token";
+
+    //用来刷新token有效期
+    public static String refresh_token = "https://api.weixin.qq.com/sns/oauth2/refresh_token";
+
+    //获取微信用户信息
+    public static String get_user_info = "https://api.weixin.qq.com/sns/userinfo";
+
 }

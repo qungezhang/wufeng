@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -419,4 +420,28 @@ public class ProDictController {
         return data;
     }
 
+    @RequestMapping("/detailDic")
+    @ResponseBody
+    public Map<String,Object> detailDic(HttpServletRequest request,String did){
+        Map<String,Object> map = new HashMap<>();
+        ProDict proDict = null;
+        int code = 200;
+        String message = "";
+        if(StringUtils.isEmpty(did)){
+            code = 500;
+            message = "参数错误";
+
+        }
+        try {
+            proDict = proDictService.selectByPrimaryKey(Integer.parseInt(did));
+        } catch (Exception e) {
+            code = 500;
+            message = "请求失败";
+        }
+
+        map.put("code",code);
+        map.put("message",message);
+        map.put("result",proDict);
+        return map;
+    }
 }

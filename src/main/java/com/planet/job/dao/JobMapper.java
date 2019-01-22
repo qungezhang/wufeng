@@ -2,6 +2,7 @@ package com.planet.job.dao;
 
 import com.planet.common.mybatis.MybatisMapper;
 import com.planet.job.domain.Job;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -77,4 +78,7 @@ public interface JobMapper extends MybatisMapper{
      * @create 2018/9/5 14:29
      */
     List<Job> selectIn30MinuteJobList();
+
+
+
 }

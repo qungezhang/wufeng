@@ -158,6 +158,17 @@
                                     }
                                 },
                                 width: 10
+                            },{
+                                title: "备注信息",
+                                field: "remarks",
+                                formatter: function (data) {
+                                    if (data == null) {
+                                        return "-";
+                                    } else {
+                                        return data;
+                                    }
+                                },
+                                width: 10
                             },
                             {
                                 title: "领取时间",
@@ -203,8 +214,8 @@
                                         var result = "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='查看' type='button' onclick='jobInfo(" + JSON.stringify(rowData) + ")'/>";
                                         var ujId = rowData.examineId;
                                         if(1 == rowData.status){
-                                            if(null != ujId &&'' != ujId){
-                                                result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='审核' type='button' onclick='openExamineDiv(" + JSON.stringify(rowData) + ")'/>";
+                                            if(null != ujId &&'' != ujId){//
+                                                result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='审核' type='button' onclick='userJobList(" + JSON.stringify(rowData) + ")'/>";
                                             }
                                         }else if(2 == rowData.status){
                                             result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='完成' type='button' onclick='finishJob(" + JSON.stringify(rowData) + ")'/>";
@@ -217,13 +228,22 @@
                                         if(5 != rowData.status){
                                             result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='修改' type='button' onclick='openAddDiv(false," + JSON.stringify(rowData) + ")'/>";
                                         }
+                                        if(0 == rowData.status || 1 == rowData.status){
+                                            result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='推送' type='button' onclick='sendJob(" + JSON.stringify(rowData) + ")'/>";
+                                        }
+                                        if(1 == rowData.examineStatus){
+                                            result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='审核通过' type='button''/>";
+                                        }
+                                        if(2 == rowData.examineStatus){
+                                            result += "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='审核不通过' type='button''/>";
+                                        }
 
                                         return result;
                                     } else {
                                         return "";
                                     }
                                 },
-                                width: 30
+                                width: 40
                             }
                         ]]
                     }
@@ -452,6 +472,32 @@
 
         }
 
+        function sendJob(data) {
+            var jid = data.jid;
+            $.messager.confirm('提示', '确定要推送该任务吗？', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: "/job/sengMassage",
+                        dataType: "json",
+                        type: "post",
+                        data: {
+                            title:"任务推送",
+                            content: "出新任务啦，要不要看看呢",
+                            type:'3',
+                            sn:jid
+                        },
+                        error: function () {
+                            alert("系统错误!");
+                        },
+                        success: function (data) {
+                            $.messager.confirm("提示", data.msg);
+                            $("#job").datagrid("reload");
+                        }
+                    });
+                }
+            });
+        }
+
         function addExamine(){
 
             $("#examineForm").attr("action", "/userJob/examineUserJob");
@@ -529,6 +575,9 @@
                     +   '<td>领取人身份证：'+ (null == data.receiveCardNo ? '' : data.receiveCardNo)+'</td>'
                     +  '</tr>'
                     +  '<tr>'
+                    +   '<td>领取人备注信息：'+ (null == data.remarks ? '' : data.remarks)+'</td>'
+                    +  '</tr>'
+                    +  '<tr>'
                     +   '<td>审核状态：'+ examineStatusStr+'</td>'
                     +   '<td>审核备注：'+ (null == data.examineRemark ? '' : data.examineRemark) +'</td>'
                     +  '</tr>'
@@ -551,6 +600,98 @@
                 }
             });
 
+        }
+
+        /**人员审核列表*/
+        function userJobList(data){
+            $('#userjob').window('open');  // open a window
+            $('#userjob').window('center');
+            var jid = data.jid;
+
+            $("#userjob2").datagrid({
+                    url: "/job/getJobUserList",
+                    method: "post",
+                    idField: "jid",
+                    remoteSort: true,
+                    fitColumns: true,
+                    fit: true,
+                    striped: true,
+                    pagination: true,
+                    rownumbers: true,
+                    singleSelect: true,
+                    autoRowHeight: true,
+                    pageSize: 20,
+                    pageList: [10, 15, 20, 25, 30],
+                    queryParams:{
+                        jid:jid
+                    },
+                    frozenColumns: [[
+                        {
+                            title: "编号",
+                            field: "jobId",
+                            formatter: function (data) {
+                                if (data == null) {
+                                    return "-";
+                                } else {
+                                    return data;
+                                }
+                            },
+                            width: 100
+                        },
+                        {
+                            title: "用户编号",
+                            field: "uid",
+                            formatter: function (data) {
+                                if (data == null) {
+                                    return "-";
+                                } else {
+                                    return data;
+                                }
+                            },
+                            width: 100
+                        }
+                        ]],
+                    columns: [[
+                        {
+                            title: "领取人",
+                            field: "name",
+                            formatter: function (data) {
+                                if (data == null) {
+                                    return "-";
+                                } else {
+                                    return data;
+                                }
+                            },
+                            width: 20
+                        },{
+                            title: "备注信息",
+                            field: "remark",
+                            formatter: function (data) {
+                                if (data == null) {
+                                    return "-";
+                                } else {
+                                    return data;
+                                }
+                            },
+                            width: 15
+                        },
+                        {
+                            title: "操作",
+                            field: "operate",
+                            formatter: function (data, rowData) {
+                                console.log(rowData.status);
+                                if (data == null) {
+                                    var result = "<input style='background:-moz-linear-gradient(top,#ffffff,#eeeeee);border-radius: 4px;border:1px #cccccc solid;' value='审核' type='button' onclick='openExamineDiv(" + JSON.stringify(rowData) + ")'/>";
+                                    return result;
+                                } else {
+                                    return "";
+                                }
+                            },
+                            width: 40
+                        }
+                    ]]
+                }
+            )
         }
 
     </script>
@@ -583,11 +724,18 @@
 
 <table id="job" style="width:auto;"></table>
 
+
+
 <div id="jobInfo" class="easyui-window" title="查看任务详情" style="height:500px;width:600px;"
      data-options="iconCls:'icon-search',modal:true" closed="true">
     <div class="easyui-layout" data-options="fit:true" id="info_div">
 
     </div>
+</div>
+
+<div id="userjob" class="easyui-window" title="审核人员任务" style="height:500px;width:600px;"
+     data-options="iconCls:'icon-search',modal:true" closed="true">
+    <table id="userjob2" style="width:auto;"></table>
 </div>
 
 <div id="addDiv" class="easyui-window" title="添加任务" style="height:600px;width:400px;"

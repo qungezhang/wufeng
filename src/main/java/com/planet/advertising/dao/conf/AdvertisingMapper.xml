@@ -49,6 +49,9 @@
       <if test="createdate != null" >
         createDate,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="imgname != null" >
@@ -65,6 +68,9 @@
       </if>
       <if test="createdate != null" >
         #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -108,7 +114,7 @@
   <select id="selectAdvertisingList" parameterType="com.planet.advertising.domain.Advertising" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from Sys_Advertising where isUse=1 ORDER BY sort,createDate DESC LIMIT 5
+    from Sys_Advertising where isUse=1 and `type` = 0 ORDER BY sort,createDate DESC LIMIT 5
   </select>
 
   <select id="selectAdvertisingListByType" parameterType="java.lang.Integer" resultMap="BaseResultMap">

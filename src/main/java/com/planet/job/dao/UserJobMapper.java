@@ -2,6 +2,7 @@ package com.planet.job.dao;
 
 import com.planet.common.mybatis.MybatisMapper;
 import com.planet.job.domain.UserJob;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -41,7 +42,7 @@ public interface UserJobMapper extends MybatisMapper{
      * @create 2018/8/10 15:27
      */
     int updateByPrimaryKeySelective(UserJob userJob);
-    
+
     /**
      * @Description 根据任务编号查找被领取的任务
      * @param jid 任务编号
@@ -73,4 +74,25 @@ public interface UserJobMapper extends MybatisMapper{
      * @create 2018/9/5 9:49
      */
     List<UserJob> getUserJobListByJid(Map<String,Object> map);
+
+
+    /**
+     * 一个人接取成功，其他人状态变成失败
+     * @return
+     */
+    int updateByJodidAndUserid(Map<String,Object> map);
+
+    /**
+     * 判断该用户是否领取过这个任务
+     * @param map
+     * @return
+     */
+    List<UserJob> getUserJobListByJidAndUser(Map<String,Object> map);
+
+    /**
+     * 获取接这个任务的所有人员
+     * @param jid
+     * @return
+     */
+    List<Map<String,Object>> getJobUserList(String jid);
 }

@@ -28,4 +28,7 @@ public interface ProProductSaleMapper extends MybatisMapper{
     //查询销售产品是否使用产品主表数据 for pro_product del
     int selectByPid(Map<String,Object> map);
 
+
+    ProProductSale selectByPid2(String pid);
+
 }

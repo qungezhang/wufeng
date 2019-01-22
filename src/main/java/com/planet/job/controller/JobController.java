@@ -1,5 +1,6 @@
 package com.planet.job.controller;
 
+import cn.jpush.api.push.PushResult;
 import com.planet.admin.domain.Admin;
 import com.planet.common.Constant;
 import com.planet.common.mybatis.plugins.page.Pagination;
@@ -9,12 +10,15 @@ import com.planet.job.domain.Job;
 import com.planet.job.domain.UserJob;
 import com.planet.job.service.JobService;
 import com.planet.job.service.UserJobService;
+import com.planet.proproductsale.domain.ProProductSale;
+import com.planet.proproductsale.service.ProProductSaleService;
 import com.planet.user.domain.UserAgent;
 import com.planet.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,6 +46,9 @@ public class JobController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProProductSaleService proProductSaleService;
 
 
     @RequestMapping("/index")
@@ -73,9 +80,16 @@ public class JobController {
             jid = request.getParameter("jid");
             name = request.getParameter("name");
             status = request.getParameter("status");
-            map.put("jid", jid);
-            map.put("name", name);
-            map.put("status", status);
+            if(jid!=null&&!jid.equals("")){
+//                jid = null;
+                map.put("jid", jid);
+            }
+            if(name!=null&&!name.equals("")){
+                map.put("name", name);
+            }
+            if(status!=null&&!status.equals("")){
+                map.put("status", status);
+            }
 
             jobList = jobService.listPageSelectJobAll(map);
 
@@ -141,11 +155,11 @@ public class JobController {
             if (null != jid) {
                 logger.info("新增了一个任务");
                 msg = "新增任务成功";
-                Map<String,Object> message = new HashMap<>();
-                message.put("type",Constant.JOB_STATUS);
-                message.put("jobId",jid);
-                message.put("jobName",job.getName());
-                JiGService.sendJiGMessage(message);
+//                Map<String,Object> message = new HashMap<>();
+//                message.put("type",Constant.JOB_STATUS);
+//                message.put("jobId",jid);
+//                message.put("jobName",job.getName());
+//                JiGService.sendJiGMessage(message);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -302,5 +316,73 @@ public class JobController {
         return model;
     }
 
+    /**
+     * 获取接这个任务的所有人员
+     * @param request
+     * @return
+     */
+    @RequestMapping("/getJobUserList")
+    @ResponseBody
+    public Map<String,Object> getJobUserList(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        int success = 0;
+        String msg = "操作失败";
+        String jid = request.getParameter("jid");
+        List<Map<String, Object>> jobUserList = new ArrayList<>();
+        if(!StringUtils.isEmpty(jid)){
+            success = 1;
+            msg = "获取成功";
+
+            jobUserList = userJobService.getJobUserList(jid);
+        }
+
+        map.put("msg", msg);
+        map.put("success", success);
+        map.put("rows", jobUserList);
+        map.put("total", jobUserList.size());
+        return map;
+    }
+
+    /**
+     * 推送任务和产品
+     * @param request
+     * @return
+     */
+    @RequestMapping("/sengMassage")
+    @ResponseBody
+    public Map<String,Object> sengMassage(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        String type = request.getParameter("type");
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String sn = request.getParameter("sn");
+        map.put("type", type);
+        map.put("title",title);
+        map.put("content",content);
+
+        if(StringUtils.isEmpty(type)){
+            map.put("msg","推送成功");
+            map.put("success",200);
+            return map;
+        }
+
+        if(type.equals("2")){
+            try {
+                ProProductSale proProductSale = proProductSaleService.selectByPid2(sn);
+                if(proProductSale == null){
+                    sn = "";
+                }else{
+                    sn = proProductSale.getPsid();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        JiGService.sendJiGMessage2(content,title,type,sn);
+
+        map.put("msg", "推送成功");
+        map.put("success", 200);
+        return map;
+    }
 
 }

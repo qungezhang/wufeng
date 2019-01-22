@@ -89,6 +89,7 @@
                 <a href="/dict/toProdict?type=1" class="planet-menu-item js-menu-item">品类</a>
                 <a href="/dict/toProdict?type=2" class="planet-menu-item js-menu-item">品牌</a>
                 <a href="/dict/toProdict?type=3" class="planet-menu-item js-menu-item">系列</a>
+                <a href="/dict/toProdict?type=4" class="planet-menu-item js-menu-item">规格</a>
                 <a href="/advertising/toAdvertising" class="planet-menu-item js-menu-item">广告</a>
             </div>
 
@@ -112,6 +113,7 @@
                 <a href="/admin/index" class="planet-menu-item js-menu-item">管理员中心</a>
                 <a href="/message/index" class="planet-menu-item js-menu-item">消息管理</a>
                 <a href="/messageBatch/index" class="planet-menu-item js-menu-item">消息模板</a>
+                <a href="/menuopen/index" class="planet-menu-item js-menu-item">APP模块管理</a>
                 <a href="/admin/logout?username=${admin.username}" class="planet-menu-item">退出登录</a>
             </div>
 

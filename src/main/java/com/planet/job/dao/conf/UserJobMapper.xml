@@ -34,7 +34,7 @@
             and uid = #{uid,jdbcType=INTEGER}
         </if>
         <if test="startTime != null and endTime != null">
-           and loseTime between #{startTime,jdbcType=TIMESTAMP} and  #{endTime,jdbcType=TIMESTAMP}
+            and loseTime between #{startTime,jdbcType=TIMESTAMP} and  #{endTime,jdbcType=TIMESTAMP}
         </if>
         ORDER BY loseTime ASC
     </select>
@@ -185,4 +185,17 @@
         where jobId = #{jobId,jdbcType=VARCHAR} and (`status` != 1 and examineStatus != 2 or uid = #{uid,jdbcType=INTEGER})
     </select>
 
+    <update id="updateByJodidAndUserid" parameterType="com.planet.job.domain.UserJob">
+        UPDATE sys_user_job SET examineStatus = '2' where uid != #{uid,jdbcType=INTEGER} and jobId = #{JobId,jdbcType=VARCHAR};
+    </update>
+
+    <select id="getUserJobListByJidAndUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select  <include refid="Base_Column_List"/>
+        from sys_user_job
+        where jobId = #{jobId,jdbcType=VARCHAR} and uid = #{uid}
+    </select>
+
+    <select id="getJobUserList" resultType="java.util.Map" parameterType="java.lang.String">
+        select uj.id as examineId,uj.examineStatus,uj.jobId,uj.uid,uj.remark,u.UserName,u.name,u.tel,uj.status,uj.examineStatus from sys_user_job uj,sys_user u where uj.uid = u.uid and uj.jobId = #{jid}
+    </select>
 </mapper>

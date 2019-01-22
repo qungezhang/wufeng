@@ -300,4 +300,9 @@ public class UserServiceimpl implements UserService {
     public Integer findUserRank(Integer uid) {
         return userAgentMapper.findUserRank(uid);
     }
+
+    @Override
+    public UserAgent selectByOpenid(String openid) {
+        return userAgentMapper.selectByOpenid(openid);
+    }
 }

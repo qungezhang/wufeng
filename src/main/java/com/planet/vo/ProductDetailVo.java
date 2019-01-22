@@ -31,6 +31,10 @@ public class ProductDetailVo {
 
     private String sortname;
 
+    private Integer guigeid;
+
+    private String guigename;
+
     private Integer stock;
 
     private String productname;
@@ -40,6 +44,32 @@ public class ProductDetailVo {
     private Date saledate;
 
     private Integer ptype;
+
+    private String detailimg;
+
+    public Integer getGuigeid() {
+        return guigeid;
+    }
+
+    public void setGuigeid(Integer guigeid) {
+        this.guigeid = guigeid;
+    }
+
+    public String getGuigename() {
+        return guigename;
+    }
+
+    public void setGuigename(String guigename) {
+        this.guigename = guigename;
+    }
+
+    public String getDetailimg() {
+        return detailimg;
+    }
+
+    public void setDetailimg(String detailimg) {
+        this.detailimg = detailimg;
+    }
 
     public String getPsid() {
         return psid;

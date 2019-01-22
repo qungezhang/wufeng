@@ -37,9 +37,9 @@
     </select>
 
     <select id="listPageSelectJobAll" resultMap="BaseResultMap" parameterType="com.planet.job.domain.Job">
-        select j.*,uj.uid as receiveId,uj.username as receiveName,uj.mobile as receiveMobile,uj.cardNo as receiveCardNo,uj.createTime as receiveTime,uj.examineRemark,uj.id as examineId,uj.examineStatus,uj.status as userJobStatus
+        select j.*,uj.uid as receiveId,uj.remark as remarks,uj.username as receiveName,uj.mobile as receiveMobile,uj.cardNo as receiveCardNo,uj.createTime as receiveTime,uj.examineRemark,uj.id as examineId,uj.examineStatus,uj.status as userJobStatus
         from sys_job j
-        left join sys_user_job uj on uj.jobId = j.jid and uj.`status` = 0  and examineStatus != 2
+        left join sys_user_job uj on uj.jobId = j.jid and uj.`status` = 0
         where  1=1
         <if test="jid != null and jid != ''">
             and j.jid = #{jid,jdbcType=VARCHAR}

@@ -67,6 +67,8 @@
                                         return "品牌";
                                     } else if (data == 3) {
                                         return "系列";
+                                    } else if(data == 4){
+                                        return "规格";
                                     }
                                 },
                                 width: 5,
@@ -122,6 +124,19 @@
                             }, {
                                 title: "图片",
                                 field: "imgurl",
+                                formatter: function (data) {
+                                    if (data == null || data == "") {
+                                        return "";
+                                    } else {
+                                        return "<img  src='/static/img/img.png' style='height: 20px;width: 20px' onclick='openImg(" + JSON.stringify(data) + ")'/>";
+                                    }
+                                },
+                                width: 10,
+                                hidden: false
+                            },
+                            {
+                                title: "详情图片",
+                                field: "detailimg",
                                 formatter: function (data) {
                                     if (data == null || data == "") {
                                         return "";
@@ -224,6 +239,10 @@
                 } else if (type == 3) {
                     $("#add_parentId1").combobox("reload", "/dict/listDidAndDicName?type=1");
                     $("#add_parentId2").combobox("readonly", true);
+                } else if(type == 4){
+                    $("#add_parentId3").combobox("reload", "/dict/listDidAndDicName?type=1");
+                    $("#add_parentId4").combobox("readonly", true);
+                    $("#add_parentId5").combobox("readonly", true);
                 }
 
                 firstOpenAddDiv = false;
@@ -244,6 +263,9 @@
 
             $("#add_file").textbox("setText", "");
             $("#add_file").textbox("setValue", "");
+
+            $("#add_file2").textbox("setText", "");
+            $("#add_file2").textbox("setValue", "");
 
             $('#addDiv').window('open');  // open a window
             $('#addDiv').window('center');
@@ -267,6 +289,27 @@
             $("#add_parentId2").combobox("clear");
         }
 
+        function reloadBrandId2() {
+            var parentId = $("#add_parentId3").combobox("getValue");
+//            alert(parentId);
+            $("#add_parentId4").combobox("reload", "/dict/listDidAndDicName?type=2&parentId=" + parentId);
+            $("#add_parentId4").combobox("readonly", false);
+        }
+
+        function clearBrandId2() {
+            $("#add_parentId4").combobox("clear");
+        }
+
+        function reloadBrandId3() {
+            var parentId = $("#add_parentId4").combobox("getValue");
+//            alert(parentId);
+            $("#add_parentId5").combobox("reload", "/dict/listDidAndDicName?type=3&parentId=" + parentId);
+            $("#add_parentId5").combobox("readonly", false);
+        }
+
+        function clearBrandId3() {
+            $("#add_parentId5").combobox("clear");
+        }
         /**
          * add a new dic
          */
@@ -340,6 +383,9 @@
 
             $("#edit_file").textbox("setText", "");
             $("#edit_file").textbox("setValue", "");
+
+            $("#edit_file2").textbox("setText", "");
+            $("#edit_file2").textbox("setValue", "");
 
             $('#editDiv').window('open');  // open a window
             $('#editDiv').window('center');
@@ -488,6 +534,42 @@
                                        data-options="valueField: 'did',textField: 'dictname'"/></td>
                         </tr>
                     </c:if>
+
+                    <c:if test="${type == 4}">
+                        <tr>
+                        <td>
+                            品类:
+                        </td>
+                        <td><input class="easyui-combobox" id="add_parentId3" required="required"
+                                   data-options="valueField: 'did',textField: 'dictname',
+                                            onSelect:function(selection){
+                                            reloadBrandId2();
+                                            },
+                                            onChange:function(newValue,oldValue){
+                                            clearBrandId2();
+                                        }"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                品牌:
+                            </td>
+                            <td><input class="easyui-combobox" id="add_parentId4" required="required"
+                                       data-options="valueField: 'did',textField: 'dictname',
+                                            onSelect:function(selection){
+                                            reloadBrandId3();
+                                            },
+                                            onChange:function(newValue,oldValue){
+                                            clearBrandId3();
+                                        }"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                系列:
+                            </td>
+                            <td><input class="easyui-combobox" id="add_parentId5" name="parentId" required="required"
+                                       data-options="valueField: 'did',textField: 'dictname'"/></td>
+                        </tr>
+                    </c:if>
                     <tr>
                         <td>名称:</td>
                         <td><input class="easyui-textbox" id="add_dicname" name="dicname" type="text"/></td>
@@ -503,9 +585,20 @@
                         <td><input class="easyui-numberbox" id="add_sn" name="sn" type="text"/></td>
                     </tr>
                     <tr>
+                        <td>品类图片:</td>
                         <td colspan="2">
                             <%--<input type="file" id="file" name="file" style="width:90%"/>--%>
                             <input class="easyui-filebox" id="add_file" name="file" style="width:90%"
+                                   data-options="
+                            buttonText: '选择图片',
+                            buttonAlign: 'left'"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>详情图片:</td>
+                        <td colspan="2">
+                            <%--<input type="file" id="file" name="file" style="width:90%"/>--%>
+                            <input class="easyui-filebox" id="add_file2" name="file2" style="width:90%"
                                    data-options="
                             buttonText: '选择图片',
                             buttonAlign: 'left'"/>
@@ -545,9 +638,20 @@
                         <td><input class="easyui-numberbox" id="edit_sn" name="sn" type="text"/></td>
                     </tr>
                     <tr>
+                        <td>品类图片:</td>
                         <td colspan="2">
                             <%--<input type="file" id="file" name="file" style="width:90%"/>--%>
-                            <input class="easyui-filebox" id="edit_file" name="file" style="width:90%"
+                            <input class="easyui-filebox" id="add_file" name="file" style="width:90%"
+                                   data-options="
+                            buttonText: '选择图片',
+                            buttonAlign: 'left'"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>详情图片:</td>
+                        <td colspan="2">
+                            <%--<input type="file" id="file" name="file" style="width:90%"/>--%>
+                            <input class="easyui-filebox" id="add_file2" name="file2" style="width:90%"
                                    data-options="
                             buttonText: '选择图片',
                             buttonAlign: 'left'"/>

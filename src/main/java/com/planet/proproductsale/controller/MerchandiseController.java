@@ -142,11 +142,11 @@ public class MerchandiseController {
                 ProProduct proProduct = proProductService.selectByPrimaryKey(pid);
                 success = 1;
                 msg = "添加成功";
-                Map<String,Object> message = new HashMap<>();
-                message.put("type", Constant.PRODUCT_SEND);
-                message.put("psId", psId);
-                message.put("productName",proProduct.getProductname());
-                JiGService.sendJiGMessage(message);
+//                Map<String,Object> message = new HashMap<>();
+//                message.put("type", Constant.PRODUCT_SEND);
+//                message.put("psId", psId);
+//                message.put("productName",proProduct.getProductname());
+//                JiGService.sendJiGMessage(message);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

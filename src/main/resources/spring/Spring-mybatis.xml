@@ -70,6 +70,7 @@
                 <value>classpath*:com/planet/message/dao/conf/MessageBatchMapper.xml</value>
                 <value>classpath*:com/planet/message/dao/conf/MessageMapper.xml</value>
                 <value>classpath*:com/planet/point/dao/conf/*.xml</value>
+                <value>classpath*:com/planet/menuopen/dao/conf/MenuopenMapper.xml</value>
                 <value>classpath*:com/planet/job/dao/conf/*.xml</value>
             </list>
         </property>
